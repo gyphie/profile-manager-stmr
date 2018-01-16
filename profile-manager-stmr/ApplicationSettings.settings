@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="net.glympz.ProfileManagerSTMR" GeneratedClassName="ApplicationSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SteamFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="GameAppID" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">675010</Value>
+    </Setting>
+    <Setting Name="GameAppDataFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="GameFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SteamRegistryKey32" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam</Value>
+    </Setting>
+    <Setting Name="SteamRegistryKey64" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Valve\Steam</Value>
+    </Setting>
+    <Setting Name="GameSubfolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\steamapps\common\Spintires MudRunner</Value>
+    </Setting>
+    <Setting Name="LibraryFoldersConfig" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\steamapps\libraryfolders.vdf</Value>
+    </Setting>
+    <Setting Name="GameAppDataSaveFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\UserSaves</Value>
+    </Setting>
+    <Setting Name="GameAppDataFolderName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\SpinTires MudRunner</Value>
+    </Setting>
+    <Setting Name="ProfilesSubfolderName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\ProfileManager</Value>
+    </Setting>
+    <Setting Name="ModFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ModSubfolderName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\Mods</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
