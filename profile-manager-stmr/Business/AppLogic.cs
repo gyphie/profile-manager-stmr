@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -12,12 +13,10 @@ namespace net.glympz.ProfileManagerSTMR.Business
 {
 	public static class AppLogic
 	{
-		public static void LaunchGame(int appID)
+		public static void LaunchGame(string steamExecutablePath, int appID)
 		{
-			string steamPath = @"C:\Program Files (x86)\Steam\Steam.exe";
-
 			Process steam = new Process();
-			steam.StartInfo.FileName = steamPath;
+			steam.StartInfo.FileName = steamExecutablePath;
 			steam.StartInfo.Arguments = $"-applaunch {appID}";
 			steam.Start();
 		}
@@ -28,6 +27,17 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			path2 = (path2 ?? "").TrimStart(Path.DirectorySeparatorChar);
 
 			return Path.Combine(path1, path2);
+		}
+
+		/// <summary>
+		/// Returns true if the subfolder is the same as or is a child of the parent folder
+		/// </summary>
+		public static bool IsSubdirectory(string parent, string subfolder)
+		{
+			var parentUri = new Uri(parent);
+			var subUri = new Uri(subfolder);
+
+			return parentUri == subUri || parentUri.IsBaseOf(subUri);
 		}
 
 		internal static bool GetInitialSettings(ApplicationSettings appSettings, out string messages)
@@ -125,11 +135,7 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			if (!string.IsNullOrEmpty(appSettings.GameFolder)) {
 				if (!string.IsNullOrEmpty(appSettings.ModFolder))
 				{
-					var gameUri = new Uri(appSettings.GameFolder);
-					var modUri = new Uri(appSettings.ModFolder);
-
-					// If the mod folder we have is not the game folder or a subfolder then we don't want to use it
-					if (gameUri != modUri && gameUri.IsBaseOf(modUri))
+					if (!AppLogic.IsSubdirectory(appSettings.GameFolder, appSettings.ModFolder))
 					{
 						appSettings.ModFolder = "";
 					}
@@ -167,6 +173,28 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			}
 
 			return showSettingsDialog;
+		}
+
+		public static bool IsProcessRunning(string filePath)
+		{
+			filePath = filePath.ToLower();
+
+			var wmiQueryString = "SELECT ProcessId, ExecutablePath, CommandLine FROM Win32_Process";
+			using (var searcher = new ManagementObjectSearcher(wmiQueryString))
+			using (var results = searcher.Get())
+			{
+				var query = from p in Process.GetProcesses()
+							join mo in results.Cast<ManagementObject>()
+								on p.Id equals (int)(uint)mo["ProcessId"]
+							select new
+							{
+								Process = p,
+								Path = (string)mo["ExecutablePath"],
+								CommandLine = (string)mo["CommandLine"],
+							};
+
+				return query.Any(a => a.Path != null && a.Path.ToLower() == filePath);
+			}
 		}
 	}
 }

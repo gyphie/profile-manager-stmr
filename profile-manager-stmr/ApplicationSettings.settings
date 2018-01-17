@@ -41,5 +41,11 @@
     <Setting Name="ModSubfolderName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">\Mods</Value>
     </Setting>
+    <Setting Name="GameExecutable" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">MudRunner.exe</Value>
+    </Setting>
+    <Setting Name="SteamExecutable" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">steam.exe</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

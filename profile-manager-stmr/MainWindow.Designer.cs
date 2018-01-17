@@ -38,6 +38,7 @@ namespace spintires_mudrunner_profile_manager
 			this.btnLaunch = new System.Windows.Forms.Button();
 			this.lblMods = new System.Windows.Forms.Label();
 			this.cblMods = new System.Windows.Forms.CheckedListBox();
+			this.btnSettings = new System.Windows.Forms.Button();
 			this.panDetail.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -87,7 +88,7 @@ namespace spintires_mudrunner_profile_manager
 			this.txtProfileName.Location = new System.Drawing.Point(128, 18);
 			this.txtProfileName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.txtProfileName.Name = "txtProfileName";
-			this.txtProfileName.Size = new System.Drawing.Size(396, 22);
+			this.txtProfileName.Size = new System.Drawing.Size(315, 22);
 			this.txtProfileName.TabIndex = 3;
 			this.txtProfileName.TextChanged += new System.EventHandler(this.txtProfileName_TextChanged);
 			// 
@@ -110,6 +111,7 @@ namespace spintires_mudrunner_profile_manager
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panDetail.AutoScroll = true;
 			this.panDetail.BackColor = System.Drawing.Color.White;
+			this.panDetail.Controls.Add(this.btnSettings);
 			this.panDetail.Controls.Add(this.lblLine);
 			this.panDetail.Controls.Add(this.btnDelete);
 			this.panDetail.Controls.Add(this.btnLaunch);
@@ -129,7 +131,7 @@ namespace spintires_mudrunner_profile_manager
 			this.lblLine.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.lblLine.Location = new System.Drawing.Point(128, 46);
 			this.lblLine.Name = "lblLine";
-			this.lblLine.Size = new System.Drawing.Size(396, 2);
+			this.lblLine.Size = new System.Drawing.Size(315, 2);
 			this.lblLine.TabIndex = 9;
 			// 
 			// btnDelete
@@ -194,6 +196,19 @@ namespace spintires_mudrunner_profile_manager
 			this.cblMods.TabIndex = 6;
 			this.cblMods.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.cblMods_ItemCheck);
 			// 
+			// btnSettings
+			// 
+			this.btnSettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			this.btnSettings.FlatAppearance.BorderSize = 0;
+			this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.btnSettings.Location = new System.Drawing.Point(492, 12);
+			this.btnSettings.Name = "btnSettings";
+			this.btnSettings.Size = new System.Drawing.Size(32, 32);
+			this.btnSettings.TabIndex = 10;
+			this.btnSettings.Text = "S";
+			this.btnSettings.UseVisualStyleBackColor = true;
+			this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+			// 
 			// frmMainWindow
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -226,6 +241,7 @@ namespace spintires_mudrunner_profile_manager
 		private System.Windows.Forms.CheckedListBox cblMods;
 		private System.Windows.Forms.Button btnLaunch;
 		private System.Windows.Forms.Label lblLine;
+		private System.Windows.Forms.Button btnSettings;
 	}
 }
 

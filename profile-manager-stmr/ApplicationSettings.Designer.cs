@@ -151,5 +151,23 @@ namespace net.glympz.ProfileManagerSTMR {
                 return ((string)(this["ModSubfolderName"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("MudRunner.exe")]
+        public string GameExecutable {
+            get {
+                return ((string)(this["GameExecutable"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("steam.exe")]
+        public string SteamExecutable {
+            get {
+                return ((string)(this["SteamExecutable"]));
+            }
+        }
     }
 }

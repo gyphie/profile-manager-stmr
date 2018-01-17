@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace spintires_mudrunner_profile_manager
 			this.settingsDialog = new frmSettingsDialog();
 		}
 
+		private ApplicationSettings appSettings;
 		private frmSettingsDialog settingsDialog;
 		private List<Profile> profiles;
 		private List<Mod> mods;
@@ -39,6 +41,7 @@ namespace spintires_mudrunner_profile_manager
 
 		private void frmMainWindow_Load(object sender, EventArgs e)
 		{
+			this.appSettings = ApplicationSettings.Default;
 		}
 		private void frmMainWindow_Shown(object sender, EventArgs e)
 		{
@@ -71,7 +74,7 @@ namespace spintires_mudrunner_profile_manager
 		private void GetInitialAppState()
 		{
 			string messages = "";
-			bool showSettingsDialog = AppLogic.GetInitialSettings(ApplicationSettings.Default, out messages);
+			bool showSettingsDialog = AppLogic.GetInitialSettings(this.appSettings, out messages);
 
 			if (showSettingsDialog)
 			{
@@ -80,7 +83,7 @@ namespace spintires_mudrunner_profile_manager
 					MessageBox.Show(messages);
 				}
 
-				this.settingsDialog.ShowDialog(this);
+				this.settingsDialog.ShowFormDialog(this, this.appSettings);
 			}
 		}
 
@@ -136,6 +139,13 @@ namespace spintires_mudrunner_profile_manager
 
 		private void btnLaunch_Click(object sender, EventArgs e)
 		{
+			// Check whether the game is currently running
+			if (AppLogic.IsProcessRunning(AppLogic.PathCombine(this.appSettings.GameFolder, this.appSettings.GameExecutable)))
+			{
+				MessageBox.Show("Spintires: Mudrunner is currently running. Exit the game before switching profiles.", "Spintires: Mudrunner already running", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				return;
+			}
+			
 			// Show a working modal dialog
 
 			// Preserve the current profile saves
@@ -145,8 +155,12 @@ namespace spintires_mudrunner_profile_manager
 			// Update Config.xml
 
 			// Launch game
-			AppLogic.LaunchGame(675010);
+			AppLogic.LaunchGame(AppLogic.PathCombine(appSettings.SteamFolder, appSettings.SteamExecutable), this.appSettings.GameAppID);
 		}
 
+		private void btnSettings_Click(object sender, EventArgs e)
+		{
+			this.settingsDialog.ShowFormDialog(this, this.appSettings);
+		}
 	}
 }
