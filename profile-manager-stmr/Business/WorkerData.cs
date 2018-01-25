@@ -9,6 +9,7 @@ namespace net.glympz.ProfileManagerSTMR.Business
 	public class WorkerData
 	{
 		public Profile Profile { get; set; }
+		public Profile NewDefaultProfile { get; set; }
 		public bool LaunchGame { get; set; } = false;
 	}
 }

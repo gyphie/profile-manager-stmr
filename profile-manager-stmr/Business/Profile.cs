@@ -5,12 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace net.glympz.ProfileManagerSTMR.Business
 {
 	public class Profile
 	{
-		public static Profile CreateNewProfile(string name)
+		public static Profile CreateNewProfile(string name = "Default Profile")
 		{
 			var profile = new Profile()
 			{
@@ -26,23 +28,36 @@ namespace net.glympz.ProfileManagerSTMR.Business
 		public string Guid { get; set; } = string.Empty;
 		public List<Mod> ActivatedMods { get; set; } = new List<Mod>();
 
-		public void CreateProfileFolders(string profileManagerPath, string userSaveFolderName)
+		public string ToJson()
 		{
-			var profilePath = AppLogic.PathCombine(profileManagerPath, this.Guid);
-			Directory.CreateDirectory(AppLogic.PathCombine(profilePath, userSaveFolderName));
+			var simpleObject = new
+			{
+				name = this.Name,
+				guid = this.Guid,
+				mods = this.ActivatedMods.Select(a => a.Path)
+			};
+
+			return JsonConvert.SerializeObject(simpleObject);
 		}
 
-		internal static List<Profile> LoadProfiles()
+		internal static List<Profile> LoadProfiles(string profileManagerPath)
 		{
-			return new List<Profile>
+			var anonTemplate = new { name = "", guid = "", mods = new List<string>() };
+			var profiles = new List<Profile>();
+
+			var profileFolders = Directory.GetDirectories(profileManagerPath);
+			foreach (var profileFolder in profileFolders)
 			{
-				Profile.CreateNewProfile("Test 1"),
-				Profile.CreateNewProfile("Test 2"),
-				Profile.CreateNewProfile("Test 3"),
-				Profile.CreateNewProfile("Test 4"),
-				Profile.CreateNewProfile("Test 5"),
-				Profile.CreateNewProfile("Test 6"),
-			};
+				var pObj = JsonConvert.DeserializeAnonymousType(File.ReadAllText(AppLogic.PathCombine(profileFolder, "profile.json")), anonTemplate);
+				profiles.Add(new Profile
+				{
+					Name = pObj.name,
+					Guid = pObj.guid,
+				});
+				// FIXME -- update list of active mods
+			}
+
+			return profiles;
 		}
 	}
 }

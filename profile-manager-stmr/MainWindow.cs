@@ -34,13 +34,20 @@ namespace spintires_mudrunner_profile_manager
 		private List<Profile> profiles;
 		private List<Mod> mods;
 		private int activeProfileIndex = -1;
-		private Profile activeProfile { get { return this.profiles[this.activeProfileIndex]; } }
+		private int hoverItemIndex = -1;
 
-		private int SelectedIndex
+		private int SelectedProfileIndex
 		{
 			get
 			{
-				return this.lvProfiles.SelectedIndices[0];
+				return this.lvProfiles.SelectedIndices.Count > 0 ? this.lvProfiles.SelectedIndices[0] : -1;
+			}
+		}
+		private Profile SelectedProfile
+		{
+			get
+			{
+				return this.lvProfiles.SelectedIndices.Count > 0 ? this.profiles[this.lvProfiles.SelectedIndices[0]] : null;
 			}
 		}
 
@@ -52,22 +59,36 @@ namespace spintires_mudrunner_profile_manager
 		{
 			this.GetInitialAppState();
 
-			// Async load settings and mod list
-			this.profiles = Profile.LoadProfiles();
+			// load the mod list
+			this.mods = Mod.LoadModList("");
+
+			this.profiles = Profile.LoadProfiles(AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName));
 			this.lvProfiles.Items.Clear();
 			foreach (var profile in this.profiles)
 			{
-				this.lvProfiles.Items.Add(new ListViewItem(profile.Name));
+				this.lvProfiles.Items.Add(new ListViewItem(profile.DisplayName));
 			}
 
-			if (this.profiles.Count > 0)
+			this.activeProfileIndex = this.profiles.FindIndex(a => a.Guid == this.ReadCurrentProfileGuid());
+			if (this.activeProfileIndex >= 0)
 			{
-				this.lvProfiles.Items[0].Focused = true;
-				this.lvProfiles.Items[0].Selected = true;
+				this.lvProfiles.Items[this.activeProfileIndex].Focused = true;
+				this.lvProfiles.Items[this.activeProfileIndex].Selected = true;
+			}
+			else
+			{
+				// If there was no active profile we create a new one, save it, and make it the current one
+				var profile = Profile.CreateNewProfile();
+				this.WriteProfile(profile);
+				this.WriteCurrentProfileGuid(profile.Guid);
+
+				this.profiles.Add(profile);
+				this.lvProfiles.Items.Add(new ListViewItem(profile.DisplayName));
+				this.lvProfiles.Items[this.lvProfiles.Items.Count - 1].Focused = true;
+				this.lvProfiles.Items[this.lvProfiles.Items.Count - 1].Selected = true;
 			}
 
-			// load the mod list
-			this.mods = Mod.LoadModList("");
+
 
 			foreach (var mod in this.mods)
 			{
@@ -92,26 +113,55 @@ namespace spintires_mudrunner_profile_manager
 			}
 		}
 
-		private void lvProfiles_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+		private void lvProfiles_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			this.activeProfileIndex = e.ItemIndex;
-			this.txtProfileName.Text = this.activeProfile.Name;
+			if (this.SelectedProfile != null)
+			{
+				this.txtProfileName.Text = this.SelectedProfile.Name;
+				// FIXME -- update the selected mods, suspend the ItemCheck event so we don't make unnecessary writes
+
+				this.panDetail.Enabled = true;
+			}
+			else
+			{
+				this.txtProfileName.Text = "";
+				this.panDetail.Enabled = false;
+
+			}
+		}
+		private void lvProfiles_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
+		{
+			Console.WriteLine("hover");
+			if (this.hoverItemIndex != e.Item.Index)
+			{
+				this.hoverItemIndex = e.Item.Index;
+				this.lvProfiles.Invalidate();
+			}
 		}
 
 		private void cblMods_ItemCheck(object sender, ItemCheckEventArgs e)
 		{
-
+			// FIXME -- update the profile with the mods
+			this.WriteProfile(this.SelectedProfile);
 		}
 
 		private void txtProfileName_TextChanged(object sender, EventArgs e)
 		{
-			this.activeProfile.Name = this.txtProfileName.Text;
-			this.lvProfiles.Items[this.activeProfileIndex].Text = this.activeProfile.DisplayName;
+			if (this.SelectedProfile != null)
+			{
+				this.SelectedProfile.Name = this.txtProfileName.Text;
+				this.lvProfiles.Items[this.SelectedProfileIndex].Text = this.SelectedProfile.DisplayName;
+
+				this.WriteProfile(this.SelectedProfile);
+			}
 		}
 
 		private void btnAddProfile_Click(object sender, EventArgs e)
 		{
 			var profile = Profile.CreateNewProfile("");
+
+			this.WriteProfile(profile);
+
 			this.profiles.Add(profile);
 			this.lvProfiles.Items.Add(new ListViewItem(profile.DisplayName));
 			int newProfileIndex = this.lvProfiles.Items.Count - 1;
@@ -124,28 +174,49 @@ namespace spintires_mudrunner_profile_manager
 
 		private void btnDelete_Click(object sender, EventArgs e)
 		{
-			if (MessageBox.Show("Delete profile \"\"?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No)
+			if (this.SelectedProfile == null)
 			{
 				return;
 			}
 
-			this.profiles.RemoveAt(this.activeProfileIndex);
-			this.lvProfiles.Items.RemoveAt(this.activeProfileIndex);
+			if (MessageBox.Show($"Delete \"{this.SelectedProfile.DisplayName}\"?\n\nThis will also delete any saved games in this profile.", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No)
+			{
+				return;
+			}
 
-			if (this.activeProfileIndex >= this.profiles.Count) this.activeProfileIndex--;
+			// FIXME -- delete the profile folders
 
-			this.lvProfiles.Items[this.activeProfileIndex].Focused = true;
-			this.lvProfiles.Items[this.activeProfileIndex].Selected = true;
-			this.lvProfiles.Items[this.activeProfileIndex].EnsureVisible();
+			// FIXME -- if this is the active profile then delete the file indicator
+
+			var currentIndex = this.SelectedProfileIndex;
+
+			this.profiles.RemoveAt(currentIndex);
+			this.lvProfiles.Items.RemoveAt(currentIndex);
+
+			if (currentIndex >= this.profiles.Count) currentIndex--;
+
+			// If the last profile was deleted create a new default profile
+			if (this.profiles.Count == 0)
+			{
+				var defaultProfile = Profile.CreateNewProfile();
+				this.WriteProfile(defaultProfile);
+				this.profiles.Add(defaultProfile);
+				this.lvProfiles.Items.Add(new ListViewItem(defaultProfile.DisplayName));
+				currentIndex = 0;
+			}
+
+			this.lvProfiles.Items[currentIndex].Focused = true;
+			this.lvProfiles.Items[currentIndex].Selected = true;
+			this.lvProfiles.Items[currentIndex].EnsureVisible();
 		}
 
 		private void btnLaunch_Click(object sender, EventArgs e)
 		{
-			this.SwitchProfiles(new WorkerData { Profile = this.activeProfile, LaunchGame = true });
+			this.SwitchProfiles(new WorkerData { Profile = this.SelectedProfile, LaunchGame = true });
 		}
 		private void btnSwitch_Click(object sender, EventArgs e)
 		{
-			this.SwitchProfiles(new WorkerData { Profile = this.activeProfile, LaunchGame = false });
+			this.SwitchProfiles(new WorkerData { Profile = this.SelectedProfile, LaunchGame = false });
 		}
 
 		private void btnSettings_Click(object sender, EventArgs e)
@@ -173,26 +244,22 @@ namespace spintires_mudrunner_profile_manager
 
 		private void bgwSwitchProfile_DoWork(object sender, DoWorkEventArgs e)
 		{
+			var workerData = e.Argument as WorkerData;
 			var profile = (e.Argument as WorkerData)?.Profile;
 
 			// Preserve the current profile saves
 			string profileManagerPath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName);
-			string profileGuidFile = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, "profile-manager-stmr.txt");
-			string currentProfileGuid = null;
-			try
-			{
-				currentProfileGuid = File.ReadAllText(profileGuidFile);
-			}
-			catch { }
+			string currentProfileGuid = this.ReadCurrentProfileGuid();
 
 			Profile currentProfile = this.profiles.FirstOrDefault(a => a.Guid == currentProfileGuid);
 			if (currentProfile == null)
 			{
-				currentProfile = Profile.CreateNewProfile("Default Profile");
+				currentProfile = Profile.CreateNewProfile();
+				workerData.NewDefaultProfile = currentProfile;
 			}
 
 			// Ensure the proper folder exist
-			currentProfile.CreateProfileFolders(profileManagerPath, this.appSettings.SaveFolderName);
+			this.WriteProfile(currentProfile);
 
 			// Remove the saves in the profile and copy the current Saves to the current profile
 			string currentProfileFolder = AppLogic.PathCombine(profileManagerPath, currentProfile.Guid);
@@ -227,12 +294,9 @@ namespace spintires_mudrunner_profile_manager
 				Directory.Delete(deleteFolder, true);
 			}
 
-			//	Remove current profile indicator
-			File.Delete(profileGuidFile);
-
 			// Copy New Profile saves to game folder
 			string newProfileFolder = AppLogic.PathCombine(profileManagerPath, profile.Guid);
-			profile.CreateProfileFolders(profileManagerPath, this.appSettings.SaveFolderName);
+			this.WriteProfile(profile);
 			foreach (var filePath in Directory.GetFiles(AppLogic.PathCombine(newProfileFolder, this.appSettings.SaveFolderName)))
 			{
 				var f = new FileInfo(filePath);
@@ -243,12 +307,13 @@ namespace spintires_mudrunner_profile_manager
 
 
 			// Create current profile indicator
-			File.WriteAllText(profileGuidFile, profile.Guid);
+			this.WriteCurrentProfileGuid(profile.Guid);
 
-			e.Result = e.Argument;
+			e.Result = workerData;
 		}
 		private void bgwSwitchProfile_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
+			var workerData = e.Result as WorkerData;
 			this.workingDialog.Hide();
 
 			if (e.Error != null)
@@ -256,12 +321,81 @@ namespace spintires_mudrunner_profile_manager
 
 			}
 
-			var workerData = e.Result as WorkerData;
+			this.activeProfileIndex = this.profiles.FindIndex(a => a.Guid == workerData.Profile.Guid);
+
+			if (workerData.NewDefaultProfile != null)
+			{
+				this.profiles.Add(workerData.NewDefaultProfile);
+				this.lvProfiles.Items.Add(new ListViewItem(workerData.NewDefaultProfile.DisplayName));
+			}
+
 			if (workerData.LaunchGame)
 			{
 				AppLogic.LaunchGame(AppLogic.PathCombine(appSettings.SteamFolder, appSettings.SteamExecutable), this.appSettings.GameAppID);
 			}
 
 		}
+
+		private string ReadCurrentProfileGuid()
+		{
+			try
+			{
+				string profileGuidFile = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, "profile-manager-stmr.txt");
+				return File.ReadAllText(profileGuidFile);
+			}
+			catch { }
+
+			return null;
+		}
+		private void WriteCurrentProfileGuid(string guid)
+		{
+			try
+			{
+				string profileGuidFile = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, "profile-manager-stmr.txt");
+				File.WriteAllText(profileGuidFile, guid);
+			}
+			catch { }
+		}
+
+		private void WriteProfile(Profile profile)
+		{
+			var profilePath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName, profile.Guid);
+			Directory.CreateDirectory(AppLogic.PathCombine(profilePath, this.appSettings.SaveFolderName));
+
+			File.WriteAllText(AppLogic.PathCombine(profilePath, "profile.json"), profile.ToJson());
+		}
+
+		private void CreateXML(Profile profile)
+		{
+
+		}
+
+		private void lvProfiles_DrawItem(object sender, DrawListViewItemEventArgs e)
+		{
+			Brush brush = null;
+
+			if (e.Item.Selected)
+			{
+				brush = new SolidBrush(SystemColors.Highlight);
+			}
+			else if (e.ItemIndex == this.activeProfileIndex)
+			{
+				brush = new SolidBrush(Color.FromArgb(0, 192, 0));
+			}
+			else if (e.ItemIndex == this.hoverItemIndex)	// Hover
+			{
+				brush = new SolidBrush(SystemColors.HotTrack);
+			}
+			else
+			{
+				brush = new SolidBrush(e.Item.BackColor);
+			}
+
+			e.Graphics.FillRectangle(brush, e.Bounds);
+
+			e.DrawText();
+		}
+
+
 	}
 }
