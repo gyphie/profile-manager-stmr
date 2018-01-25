@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
@@ -22,10 +23,14 @@ namespace spintires_mudrunner_profile_manager
 		{
 			InitializeComponent();
 			this.settingsDialog = new frmSettingsDialog();
+			this.workingDialog = new frmWorkingDialog();
+			this.bgwSwitchProfile.DoWork += bgwSwitchProfile_DoWork;
+			this.bgwSwitchProfile.RunWorkerCompleted += bgwSwitchProfile_RunWorkerCompleted;
 		}
 
 		private ApplicationSettings appSettings;
 		private frmSettingsDialog settingsDialog;
+		private frmWorkingDialog workingDialog;
 		private List<Profile> profiles;
 		private List<Mod> mods;
 		private int activeProfileIndex = -1;
@@ -93,7 +98,6 @@ namespace spintires_mudrunner_profile_manager
 			this.txtProfileName.Text = this.activeProfile.Name;
 		}
 
-		#region Profile Change Events
 		private void cblMods_ItemCheck(object sender, ItemCheckEventArgs e)
 		{
 
@@ -104,8 +108,6 @@ namespace spintires_mudrunner_profile_manager
 			this.activeProfile.Name = this.txtProfileName.Text;
 			this.lvProfiles.Items[this.activeProfileIndex].Text = this.activeProfile.DisplayName;
 		}
-
-		#endregion
 
 		private void btnAddProfile_Click(object sender, EventArgs e)
 		{
@@ -139,28 +141,127 @@ namespace spintires_mudrunner_profile_manager
 
 		private void btnLaunch_Click(object sender, EventArgs e)
 		{
+			this.SwitchProfiles(new WorkerData { Profile = this.activeProfile, LaunchGame = true });
+		}
+		private void btnSwitch_Click(object sender, EventArgs e)
+		{
+			this.SwitchProfiles(new WorkerData { Profile = this.activeProfile, LaunchGame = false });
+		}
+
+		private void btnSettings_Click(object sender, EventArgs e)
+		{
+			this.settingsDialog.ShowFormDialog(this, this.appSettings);
+		}
+
+		private void SwitchProfiles(WorkerData workerData)
+		{
+			if (this.bgwSwitchProfile.IsBusy)
+			{
+				return;
+			}
+
 			// Check whether the game is currently running
 			if (AppLogic.IsProcessRunning(AppLogic.PathCombine(this.appSettings.GameFolder, this.appSettings.GameExecutable)))
 			{
 				MessageBox.Show("Spintires: Mudrunner is currently running. Exit the game before switching profiles.", "Spintires: Mudrunner already running", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				return;
 			}
-			
-			// Show a working modal dialog
+
+			this.bgwSwitchProfile.RunWorkerAsync(workerData);
+			this.workingDialog.ShowWorking();
+		}
+
+		private void bgwSwitchProfile_DoWork(object sender, DoWorkEventArgs e)
+		{
+			var profile = (e.Argument as WorkerData)?.Profile;
 
 			// Preserve the current profile saves
+			string profileManagerPath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName);
+			string profileGuidFile = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, "profile-manager-stmr.txt");
+			string currentProfileGuid = null;
+			try
+			{
+				currentProfileGuid = File.ReadAllText(profileGuidFile);
+			}
+			catch { }
 
-			// Copy old saves
+			Profile currentProfile = this.profiles.FirstOrDefault(a => a.Guid == currentProfileGuid);
+			if (currentProfile == null)
+			{
+				currentProfile = Profile.CreateNewProfile("Default Profile");
+			}
+
+			// Ensure the proper folder exist
+			currentProfile.CreateProfileFolders(profileManagerPath, this.appSettings.SaveFolderName);
+
+			// Remove the saves in the profile and copy the current Saves to the current profile
+			string currentProfileFolder = AppLogic.PathCombine(profileManagerPath, currentProfile.Guid);
+			string deleteFolder = AppLogic.PathCombine(currentProfileFolder, "_delete");
+			Directory.CreateDirectory(deleteFolder);
+			foreach (var filePath in Directory.GetFiles(AppLogic.PathCombine(currentProfileFolder, this.appSettings.SaveFolderName)))
+			{
+				var f = new FileInfo(filePath);
+				f.MoveTo(AppLogic.PathCombine(deleteFolder, f.Name));
+			}
+
+			try
+			{
+				// Move current saves to the current profile folder
+				foreach (var filePath in Directory.GetFiles(AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.SaveFolderName)))
+				{
+					var f = new FileInfo(filePath);
+					f.MoveTo(AppLogic.PathCombine(currentProfileFolder, this.appSettings.SaveFolderName, f.Name));
+				}
+				
+				// Delete the old profile saves
+				Directory.Delete(deleteFolder, true);
+			}
+			catch
+			{
+				// Try to move the save files back from the temp location
+				foreach (var filePath in Directory.GetFiles(deleteFolder))
+				{
+					var f = new FileInfo(filePath);
+					f.MoveTo(AppLogic.PathCombine(currentProfileFolder, "save-games", f.Name));
+				}
+				Directory.Delete(deleteFolder, true);
+			}
+
+			//	Remove current profile indicator
+			File.Delete(profileGuidFile);
+
+			// Copy New Profile saves to game folder
+			string newProfileFolder = AppLogic.PathCombine(profileManagerPath, profile.Guid);
+			profile.CreateProfileFolders(profileManagerPath, this.appSettings.SaveFolderName);
+			foreach (var filePath in Directory.GetFiles(AppLogic.PathCombine(newProfileFolder, this.appSettings.SaveFolderName)))
+			{
+				var f = new FileInfo(filePath);
+				f.CopyTo(AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.SaveFolderName, f.Name));
+			}
 
 			// Update Config.xml
 
-			// Launch game
-			AppLogic.LaunchGame(AppLogic.PathCombine(appSettings.SteamFolder, appSettings.SteamExecutable), this.appSettings.GameAppID);
-		}
 
-		private void btnSettings_Click(object sender, EventArgs e)
+			// Create current profile indicator
+			File.WriteAllText(profileGuidFile, profile.Guid);
+
+			e.Result = e.Argument;
+		}
+		private void bgwSwitchProfile_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			this.settingsDialog.ShowFormDialog(this, this.appSettings);
+			this.workingDialog.Hide();
+
+			if (e.Error != null)
+			{
+
+			}
+
+			var workerData = e.Result as WorkerData;
+			if (workerData.LaunchGame)
+			{
+				AppLogic.LaunchGame(AppLogic.PathCombine(appSettings.SteamFolder, appSettings.SteamExecutable), this.appSettings.GameAppID);
+			}
+
 		}
 	}
 }

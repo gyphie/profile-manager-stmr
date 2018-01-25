@@ -33,12 +33,14 @@ namespace spintires_mudrunner_profile_manager
 			this.txtProfileName = new System.Windows.Forms.TextBox();
 			this.lblProfileName = new System.Windows.Forms.Label();
 			this.panDetail = new System.Windows.Forms.Panel();
+			this.btnSettings = new System.Windows.Forms.Button();
 			this.lblLine = new System.Windows.Forms.Label();
 			this.btnDelete = new System.Windows.Forms.Button();
+			this.btnSwitch = new System.Windows.Forms.Button();
 			this.btnLaunch = new System.Windows.Forms.Button();
 			this.lblMods = new System.Windows.Forms.Label();
 			this.cblMods = new System.Windows.Forms.CheckedListBox();
-			this.btnSettings = new System.Windows.Forms.Button();
+			this.bgwSwitchProfile = new System.ComponentModel.BackgroundWorker();
 			this.panDetail.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -57,7 +59,7 @@ namespace spintires_mudrunner_profile_manager
 			this.lvProfiles.MultiSelect = false;
 			this.lvProfiles.Name = "lvProfiles";
 			this.lvProfiles.ShowGroups = false;
-			this.lvProfiles.Size = new System.Drawing.Size(250, 370);
+			this.lvProfiles.Size = new System.Drawing.Size(250, 343);
 			this.lvProfiles.TabIndex = 0;
 			this.lvProfiles.TileSize = new System.Drawing.Size(230, 46);
 			this.lvProfiles.UseCompatibleStateImageBehavior = false;
@@ -71,12 +73,12 @@ namespace spintires_mudrunner_profile_manager
 			this.btnAddProfile.FlatAppearance.BorderSize = 0;
 			this.btnAddProfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnAddProfile.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnAddProfile.Location = new System.Drawing.Point(0, 367);
+			this.btnAddProfile.Location = new System.Drawing.Point(0, 340);
 			this.btnAddProfile.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.btnAddProfile.Name = "btnAddProfile";
 			this.btnAddProfile.Size = new System.Drawing.Size(250, 74);
 			this.btnAddProfile.TabIndex = 1;
-			this.btnAddProfile.Text = "Add Profile";
+			this.btnAddProfile.Text = "&Add Profile";
 			this.btnAddProfile.UseVisualStyleBackColor = false;
 			this.btnAddProfile.Click += new System.EventHandler(this.btnAddProfile_Click);
 			// 
@@ -88,7 +90,7 @@ namespace spintires_mudrunner_profile_manager
 			this.txtProfileName.Location = new System.Drawing.Point(128, 18);
 			this.txtProfileName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.txtProfileName.Name = "txtProfileName";
-			this.txtProfileName.Size = new System.Drawing.Size(315, 22);
+			this.txtProfileName.Size = new System.Drawing.Size(313, 22);
 			this.txtProfileName.TabIndex = 3;
 			this.txtProfileName.TextChanged += new System.EventHandler(this.txtProfileName_TextChanged);
 			// 
@@ -114,6 +116,7 @@ namespace spintires_mudrunner_profile_manager
 			this.panDetail.Controls.Add(this.btnSettings);
 			this.panDetail.Controls.Add(this.lblLine);
 			this.panDetail.Controls.Add(this.btnDelete);
+			this.panDetail.Controls.Add(this.btnSwitch);
 			this.panDetail.Controls.Add(this.btnLaunch);
 			this.panDetail.Controls.Add(this.lblMods);
 			this.panDetail.Controls.Add(this.cblMods);
@@ -121,8 +124,21 @@ namespace spintires_mudrunner_profile_manager
 			this.panDetail.Controls.Add(this.txtProfileName);
 			this.panDetail.Location = new System.Drawing.Point(250, 0);
 			this.panDetail.Name = "panDetail";
-			this.panDetail.Size = new System.Drawing.Size(536, 441);
+			this.panDetail.Size = new System.Drawing.Size(534, 414);
 			this.panDetail.TabIndex = 5;
+			// 
+			// btnSettings
+			// 
+			this.btnSettings.BackgroundImage = global::net.glympz.ProfileManagerSTMR.Properties.Resources.cog;
+			this.btnSettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			this.btnSettings.FlatAppearance.BorderSize = 0;
+			this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.btnSettings.Location = new System.Drawing.Point(508, 12);
+			this.btnSettings.Name = "btnSettings";
+			this.btnSettings.Size = new System.Drawing.Size(16, 16);
+			this.btnSettings.TabIndex = 10;
+			this.btnSettings.UseVisualStyleBackColor = true;
+			this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
 			// 
 			// lblLine
 			// 
@@ -131,7 +147,7 @@ namespace spintires_mudrunner_profile_manager
 			this.lblLine.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.lblLine.Location = new System.Drawing.Point(128, 46);
 			this.lblLine.Name = "lblLine";
-			this.lblLine.Size = new System.Drawing.Size(315, 2);
+			this.lblLine.Size = new System.Drawing.Size(313, 2);
 			this.lblLine.TabIndex = 9;
 			// 
 			// btnDelete
@@ -142,7 +158,7 @@ namespace spintires_mudrunner_profile_manager
 			this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnDelete.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-			this.btnDelete.Location = new System.Drawing.Point(442, 367);
+			this.btnDelete.Location = new System.Drawing.Point(440, 340);
 			this.btnDelete.Name = "btnDelete";
 			this.btnDelete.Size = new System.Drawing.Size(82, 74);
 			this.btnDelete.TabIndex = 8;
@@ -150,21 +166,38 @@ namespace spintires_mudrunner_profile_manager
 			this.btnDelete.UseVisualStyleBackColor = false;
 			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
 			// 
+			// btnSwitch
+			// 
+			this.btnSwitch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnSwitch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+			this.btnSwitch.FlatAppearance.BorderSize = 0;
+			this.btnSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.btnSwitch.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnSwitch.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+			this.btnSwitch.Location = new System.Drawing.Point(305, 340);
+			this.btnSwitch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+			this.btnSwitch.Name = "btnSwitch";
+			this.btnSwitch.Size = new System.Drawing.Size(136, 74);
+			this.btnSwitch.TabIndex = 1;
+			this.btnSwitch.Text = "&Switch";
+			this.btnSwitch.UseVisualStyleBackColor = false;
+			this.btnSwitch.Click += new System.EventHandler(this.btnSwitch_Click);
+			// 
 			// btnLaunch
 			// 
 			this.btnLaunch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnLaunch.BackColor = System.Drawing.SystemColors.MenuHighlight;
+			this.btnLaunch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
 			this.btnLaunch.FlatAppearance.BorderSize = 0;
 			this.btnLaunch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnLaunch.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnLaunch.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-			this.btnLaunch.Location = new System.Drawing.Point(0, 367);
+			this.btnLaunch.Location = new System.Drawing.Point(0, 340);
 			this.btnLaunch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.btnLaunch.Name = "btnLaunch";
-			this.btnLaunch.Size = new System.Drawing.Size(442, 74);
+			this.btnLaunch.Size = new System.Drawing.Size(305, 74);
 			this.btnLaunch.TabIndex = 1;
-			this.btnLaunch.Text = "Launch";
+			this.btnLaunch.Text = "Switch && &Launch";
 			this.btnLaunch.UseVisualStyleBackColor = false;
 			this.btnLaunch.Click += new System.EventHandler(this.btnLaunch_Click);
 			// 
@@ -192,33 +225,20 @@ namespace spintires_mudrunner_profile_manager
 			this.cblMods.Margin = new System.Windows.Forms.Padding(0);
 			this.cblMods.Name = "cblMods";
 			this.cblMods.ScrollAlwaysVisible = true;
-			this.cblMods.Size = new System.Drawing.Size(396, 289);
+			this.cblMods.Size = new System.Drawing.Size(394, 256);
 			this.cblMods.TabIndex = 6;
 			this.cblMods.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.cblMods_ItemCheck);
-			// 
-			// btnSettings
-			// 
-			this.btnSettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-			this.btnSettings.FlatAppearance.BorderSize = 0;
-			this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnSettings.Location = new System.Drawing.Point(492, 12);
-			this.btnSettings.Name = "btnSettings";
-			this.btnSettings.Size = new System.Drawing.Size(32, 32);
-			this.btnSettings.TabIndex = 10;
-			this.btnSettings.Text = "S";
-			this.btnSettings.UseVisualStyleBackColor = true;
-			this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
 			// 
 			// frmMainWindow
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(786, 438);
+			this.ClientSize = new System.Drawing.Size(784, 411);
 			this.Controls.Add(this.panDetail);
 			this.Controls.Add(this.btnAddProfile);
 			this.Controls.Add(this.lvProfiles);
 			this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-			this.MinimumSize = new System.Drawing.Size(600, 400);
+			this.MinimumSize = new System.Drawing.Size(800, 400);
 			this.Name = "frmMainWindow";
 			this.Text = "Profile Manager for Spintires: Mudrunner";
 			this.Load += new System.EventHandler(this.frmMainWindow_Load);
@@ -242,6 +262,8 @@ namespace spintires_mudrunner_profile_manager
 		private System.Windows.Forms.Button btnLaunch;
 		private System.Windows.Forms.Label lblLine;
 		private System.Windows.Forms.Button btnSettings;
+		private System.Windows.Forms.Button btnSwitch;
+		private System.ComponentModel.BackgroundWorker bgwSwitchProfile;
 	}
 }
 

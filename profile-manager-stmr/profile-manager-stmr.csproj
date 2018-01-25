@@ -66,7 +66,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application.cs" />
     <Compile Include="ApplicationSettings.cs" />
     <Compile Include="ApplicationSettings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -77,6 +76,7 @@
     <Compile Include="Business\Mod.cs" />
     <Compile Include="Business\Profile.cs" />
     <Compile Include="Business\SpinTiresConfig.cs" />
+    <Compile Include="Business\WorkerData.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +90,12 @@
     </Compile>
     <Compile Include="SettingsDialog.Designer.cs">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WorkingDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WorkingDialog.Designer.cs">
+      <DependentUpon>WorkingDialog.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
@@ -106,6 +112,9 @@
     </Compile>
     <EmbeddedResource Include="SettingsDialog.resx">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkingDialog.resx">
+      <DependentUpon>WorkingDialog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ApplicationSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

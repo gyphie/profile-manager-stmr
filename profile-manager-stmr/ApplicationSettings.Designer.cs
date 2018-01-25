@@ -107,9 +107,9 @@ namespace net.glympz.ProfileManagerSTMR {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("\\UserSaves")]
-        public string GameAppDataSaveFolder {
+        public string SaveFolderName {
             get {
-                return ((string)(this["GameAppDataSaveFolder"]));
+                return ((string)(this["SaveFolderName"]));
             }
         }
         

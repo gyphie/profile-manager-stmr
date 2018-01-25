@@ -21,12 +21,14 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			steam.Start();
 		}
 
-		public static string PathCombine(string path1, string path2)
+		public static string PathCombine(params string[] paths)
 		{
-			path1 = (path1 ?? "").TrimEnd(Path.DirectorySeparatorChar);
-			path2 = (path2 ?? "").TrimStart(Path.DirectorySeparatorChar);
+			for (int i = 0; i < paths.Length; i++)
+			{
+				paths[i] = (paths[i] ?? "").Trim(Path.DirectorySeparatorChar);
+			}
 
-			return Path.Combine(path1, path2);
+			return Path.Combine(paths);
 		}
 
 		/// <summary>
