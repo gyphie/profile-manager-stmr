@@ -42,6 +42,7 @@ namespace spintires_mudrunner_profile_manager
 			this.lblMods = new System.Windows.Forms.Label();
 			this.bgwSwitchProfile = new System.ComponentModel.BackgroundWorker();
 			this.btnSettings = new System.Windows.Forms.Button();
+			this.btnAddMod = new System.Windows.Forms.Button();
 			this.panDetail.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -81,7 +82,7 @@ namespace spintires_mudrunner_profile_manager
 			this.btnAddProfile.Name = "btnAddProfile";
 			this.btnAddProfile.Size = new System.Drawing.Size(250, 74);
 			this.btnAddProfile.TabIndex = 1;
-			this.btnAddProfile.Text = "&Add Profile";
+			this.btnAddProfile.Text = "&Add profile";
 			this.btnAddProfile.UseVisualStyleBackColor = false;
 			this.btnAddProfile.Click += new System.EventHandler(this.btnAddProfile_Click);
 			// 
@@ -104,9 +105,9 @@ namespace spintires_mudrunner_profile_manager
 			this.lblProfileName.Location = new System.Drawing.Point(12, 18);
 			this.lblProfileName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.lblProfileName.Name = "lblProfileName";
-			this.lblProfileName.Size = new System.Drawing.Size(115, 21);
+			this.lblProfileName.Size = new System.Drawing.Size(112, 21);
 			this.lblProfileName.TabIndex = 4;
-			this.lblProfileName.Text = "Profile Name:";
+			this.lblProfileName.Text = "Profile name:";
 			this.lblProfileName.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// panDetail
@@ -116,6 +117,7 @@ namespace spintires_mudrunner_profile_manager
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panDetail.AutoScroll = true;
 			this.panDetail.BackColor = System.Drawing.Color.White;
+			this.panDetail.Controls.Add(this.btnAddMod);
 			this.panDetail.Controls.Add(this.lvMods);
 			this.panDetail.Controls.Add(this.lblLine);
 			this.panDetail.Controls.Add(this.btnDelete);
@@ -211,19 +213,18 @@ namespace spintires_mudrunner_profile_manager
 			this.btnLaunch.Name = "btnLaunch";
 			this.btnLaunch.Size = new System.Drawing.Size(305, 74);
 			this.btnLaunch.TabIndex = 1;
-			this.btnLaunch.Text = "Switch && &Launch";
+			this.btnLaunch.Text = "Switch && &launch";
 			this.btnLaunch.UseVisualStyleBackColor = false;
 			this.btnLaunch.Click += new System.EventHandler(this.btnLaunch_Click);
 			// 
 			// lblMods
 			// 
-			this.lblMods.AutoSize = true;
 			this.lblMods.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblMods.Location = new System.Drawing.Point(7, 81);
 			this.lblMods.Name = "lblMods";
-			this.lblMods.Size = new System.Drawing.Size(119, 21);
+			this.lblMods.Size = new System.Drawing.Size(93, 21);
 			this.lblMods.TabIndex = 7;
-			this.lblMods.Text = "Maps && Mods:";
+			this.lblMods.Text = "Mods:";
 			this.lblMods.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// btnSettings
@@ -239,6 +240,19 @@ namespace spintires_mudrunner_profile_manager
 			this.btnSettings.TabIndex = 13;
 			this.btnSettings.UseVisualStyleBackColor = true;
 			this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+			// 
+			// btnAddMod
+			// 
+			this.btnAddMod.BackgroundImage = global::net.glympz.ProfileManagerSTMR.Properties.Resources.plugin_add;
+			this.btnAddMod.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			this.btnAddMod.FlatAppearance.BorderSize = 0;
+			this.btnAddMod.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.btnAddMod.Location = new System.Drawing.Point(106, 83);
+			this.btnAddMod.Name = "btnAddMod";
+			this.btnAddMod.Size = new System.Drawing.Size(16, 16);
+			this.btnAddMod.TabIndex = 14;
+			this.btnAddMod.UseVisualStyleBackColor = true;
+			this.btnAddMod.Click += new System.EventHandler(this.btnAddMod_Click);
 			// 
 			// frmMainWindow
 			// 
@@ -280,6 +294,7 @@ namespace spintires_mudrunner_profile_manager
 		private System.Windows.Forms.Button btnSettings;
 		private System.Windows.Forms.ListView lvMods;
 		private System.Windows.Forms.ColumnHeader columnHeader1;
+		private System.Windows.Forms.Button btnAddMod;
 	}
 }
 

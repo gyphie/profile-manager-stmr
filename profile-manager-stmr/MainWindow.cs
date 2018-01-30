@@ -11,9 +11,11 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using Microsoft.Win32;
 using net.glympz.ProfileManagerSTMR;
 using net.glympz.ProfileManagerSTMR.Business;
+using SharpCompress.Readers;
 
 namespace spintires_mudrunner_profile_manager
 {
@@ -24,6 +26,7 @@ namespace spintires_mudrunner_profile_manager
 			InitializeComponent();
 			this.settingsDialog = new frmSettingsDialog();
 			this.workingDialog = new frmWorkingDialog();
+			this.installModDialog = new frmInstallMod();
 			this.bgwSwitchProfile.DoWork += bgwSwitchProfile_DoWork;
 			this.bgwSwitchProfile.RunWorkerCompleted += bgwSwitchProfile_RunWorkerCompleted;
 		}
@@ -31,6 +34,7 @@ namespace spintires_mudrunner_profile_manager
 		private ApplicationSettings appSettings;
 		private frmSettingsDialog settingsDialog;
 		private frmWorkingDialog workingDialog;
+		private frmInstallMod installModDialog;
 		private List<Profile> profiles;
 		private List<Mod> mods;
 		private int activeProfileIndex = -1;
@@ -58,16 +62,62 @@ namespace spintires_mudrunner_profile_manager
 		private void frmMainWindow_Shown(object sender, EventArgs e)
 		{
 			this.GetInitialAppState();
+			this.LoadAppData();
+		}
 
+
+		private void GetInitialAppState()
+		{
+			string messages = "";
+			bool showSettingsDialog = AppLogic.GetInitialSettings(this.appSettings, out messages);
+
+			if (showSettingsDialog)
+			{
+				if (!string.IsNullOrEmpty(messages))
+				{
+					MessageBox.Show(messages);
+				}
+
+				this.settingsDialog.ShowFormDialog(this, this.appSettings);
+			}
+		}
+
+		private void ResetAppData()
+		{
+			this.lvMods.ItemChecked -= lvMods_ItemChecked; // Manually assign this event handler after we've populated the item list to prevent it triggering unnecessarily.
+			this.lvProfiles.SelectedIndexChanged -= lvProfiles_SelectedIndexChanged;
+
+			this.activeProfileIndex = -1;
+			this.hoverItemIndex = -1;
+
+			this.lvProfiles.Items.Clear();
+			this.lvMods.Items.Clear();
+			this.profiles = null;
+			this.mods = null;
+
+		}
+
+		private void LoadAppData()
+		{
+			this.ResetAppData();
+			
 			// load the mod list
 			this.mods = Mod.LoadModList(this.appSettings.ModFolder);
-
 			this.profiles = Profile.LoadProfiles(AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName), this.mods);
-			this.lvProfiles.Items.Clear();
+
 			foreach (var profile in this.profiles)
 			{
 				this.lvProfiles.Items.Add(new ListViewItem(profile.DisplayName));
 			}
+
+			foreach (var mod in this.mods)
+			{
+				var item = new ListViewItem(mod.Name);
+				this.lvMods.Items.Add(item);
+			}
+
+			this.lvMods.Columns[0].Width = this.lvMods.ClientSize.Width;
+
 
 			this.activeProfileIndex = this.profiles.FindIndex(a => a.Guid == this.ReadCurrentProfileGuid());
 			if (this.activeProfileIndex >= 0)
@@ -89,35 +139,10 @@ namespace spintires_mudrunner_profile_manager
 			}
 
 
-
-			foreach (var mod in this.mods)
-			{
-				var item = new ListViewItem(mod.Name);
-				this.lvMods.Items.Add(item);
-			}
-
-			this.lvMods.Columns[0].Width = this.lvMods.ClientSize.Width;
-
 			this.lvMods.ItemChecked += lvMods_ItemChecked; // Manually assign this event handler after we've populated the item list to prevent it triggering unnecessarily.
 			this.lvProfiles.SelectedIndexChanged += lvProfiles_SelectedIndexChanged;
+
 			this.lvProfiles_SelectedIndexChanged(lvProfiles, new EventArgs());
-		}
-
-
-		private void GetInitialAppState()
-		{
-			string messages = "";
-			bool showSettingsDialog = AppLogic.GetInitialSettings(this.appSettings, out messages);
-
-			if (showSettingsDialog)
-			{
-				if (!string.IsNullOrEmpty(messages))
-				{
-					MessageBox.Show(messages);
-				}
-
-				this.settingsDialog.ShowFormDialog(this, this.appSettings);
-			}
 		}
 
 		private void lvProfiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -251,7 +276,11 @@ namespace spintires_mudrunner_profile_manager
 
 		private void btnSettings_Click(object sender, EventArgs e)
 		{
-			this.settingsDialog.ShowFormDialog(this, this.appSettings);
+			var result = this.settingsDialog.ShowFormDialog(this, this.appSettings);
+			if (result == DialogResult.OK)
+			{
+				this.LoadAppData();
+			}
 		}
 
 		private void SwitchProfiles(WorkerData workerData)
@@ -334,7 +363,7 @@ namespace spintires_mudrunner_profile_manager
 			}
 
 			// Update Config.xml
-
+			this.CreateXML(profile);
 
 			// Create current profile indicator
 			this.WriteCurrentProfileGuid(profile.Guid);
@@ -358,6 +387,8 @@ namespace spintires_mudrunner_profile_manager
 				this.profiles.Add(workerData.NewDefaultProfile);
 				this.lvProfiles.Items.Add(new ListViewItem(workerData.NewDefaultProfile.DisplayName));
 			}
+
+			this.lvProfiles.Invalidate();
 
 			if (workerData.LaunchGame)
 			{
@@ -407,7 +438,62 @@ namespace spintires_mudrunner_profile_manager
 
 		private void CreateXML(Profile profile)
 		{
+			string configFilePath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, "config.xml");
+			var configXMLDocument = new XmlDocument();
+			configXMLDocument.Load(configFilePath);
 
+			var root = configXMLDocument.DocumentElement;
+
+			XmlNode mediaZipNode = null;
+
+			// Remove any MediaPath entries (except the defaults)
+			var mediaPathNodes = new List<XmlNode>();
+			foreach (XmlNode node in root.GetElementsByTagName("MediaPath"))	// Clone the list so the removeChild foreach loop doesn't have issues with modifying the underlying collection
+			{
+				mediaPathNodes.Add(node);
+			}
+
+			foreach (XmlNode mediaPath in mediaPathNodes)
+			{
+				try
+				{
+					var path = mediaPath.Attributes["Path"].Value.ToLower();
+
+					if (path == "media.zip")
+					{
+						mediaZipNode = mediaPath;
+					}
+
+					if (path != "media.zip" &&
+						path != "texturecache.zip" &&
+						path != "meshcache.zip")
+					{
+						root.RemoveChild(mediaPath);
+					}
+				}
+				catch { }
+			}
+
+			// Add MediaPath entries based on the current profile
+			foreach (var activatedMod in profile.ActivatedMods)
+			{
+				XmlNode modNode = configXMLDocument.CreateElement("MediaPath");
+				var pathAttribute = configXMLDocument.CreateAttribute("Path", null);
+				pathAttribute.Value = AppLogic.PathCombine(this.appSettings.ModSubfolderName, activatedMod.Path);
+				modNode.Attributes.Append(pathAttribute);
+				if (mediaZipNode != null)
+				{
+					root.InsertBefore(modNode, mediaZipNode);
+				}
+				else
+				{
+					root.AppendChild(modNode);
+				}
+				
+			}
+
+			// Overwrite the config file
+			configXMLDocument.Save(configFilePath);
 		}
 
 		private void lvProfiles_DrawItem(object sender, DrawListViewItemEventArgs e)
@@ -467,6 +553,15 @@ namespace spintires_mudrunner_profile_manager
 			}
 
 			this.WriteProfile(this.SelectedProfile);
+		}
+
+		private void btnAddMod_Click(object sender, EventArgs e)
+		{
+			var result = this.installModDialog.ShowForm(this, this.appSettings.ModFolder);
+			if (result == DialogResult.OK)
+			{
+				this.LoadAppData();
+			}
 		}
 	}
 }

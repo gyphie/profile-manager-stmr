@@ -28,6 +28,7 @@ namespace net.glympz.ProfileManagerSTMR
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSettingsDialog));
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
 			this.lblLine = new System.Windows.Forms.Label();
@@ -117,13 +118,14 @@ namespace net.glympz.ProfileManagerSTMR
 			// btnSteamFolderPicker
 			// 
 			this.btnSteamFolderPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnSteamFolderPicker.BackgroundImage = global::net.glympz.ProfileManagerSTMR.Properties.Resources.Folder_16x;
+			this.btnSteamFolderPicker.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnSteamFolderPicker.FlatAppearance.BorderSize = 0;
 			this.btnSteamFolderPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnSteamFolderPicker.Location = new System.Drawing.Point(599, 11);
 			this.btnSteamFolderPicker.Name = "btnSteamFolderPicker";
 			this.btnSteamFolderPicker.Size = new System.Drawing.Size(28, 28);
 			this.btnSteamFolderPicker.TabIndex = 14;
-			this.btnSteamFolderPicker.Text = "···";
 			this.btnSteamFolderPicker.UseMnemonic = false;
 			this.btnSteamFolderPicker.UseVisualStyleBackColor = true;
 			// 
@@ -162,13 +164,14 @@ namespace net.glympz.ProfileManagerSTMR
 			// btnGameFolderPicker
 			// 
 			this.btnGameFolderPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnGameFolderPicker.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnGameFolderPicker.BackgroundImage")));
+			this.btnGameFolderPicker.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnGameFolderPicker.FlatAppearance.BorderSize = 0;
 			this.btnGameFolderPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnGameFolderPicker.Location = new System.Drawing.Point(599, 51);
 			this.btnGameFolderPicker.Name = "btnGameFolderPicker";
 			this.btnGameFolderPicker.Size = new System.Drawing.Size(28, 28);
 			this.btnGameFolderPicker.TabIndex = 14;
-			this.btnGameFolderPicker.Text = "···";
 			this.btnGameFolderPicker.UseMnemonic = false;
 			this.btnGameFolderPicker.UseVisualStyleBackColor = true;
 			// 
@@ -207,13 +210,14 @@ namespace net.glympz.ProfileManagerSTMR
 			// btnAppDataFolderPicker
 			// 
 			this.btnAppDataFolderPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnAppDataFolderPicker.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAppDataFolderPicker.BackgroundImage")));
+			this.btnAppDataFolderPicker.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnAppDataFolderPicker.FlatAppearance.BorderSize = 0;
 			this.btnAppDataFolderPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnAppDataFolderPicker.Location = new System.Drawing.Point(599, 91);
 			this.btnAppDataFolderPicker.Name = "btnAppDataFolderPicker";
 			this.btnAppDataFolderPicker.Size = new System.Drawing.Size(28, 28);
 			this.btnAppDataFolderPicker.TabIndex = 14;
-			this.btnAppDataFolderPicker.Text = "···";
 			this.btnAppDataFolderPicker.UseMnemonic = false;
 			this.btnAppDataFolderPicker.UseVisualStyleBackColor = true;
 			// 
@@ -252,13 +256,14 @@ namespace net.glympz.ProfileManagerSTMR
 			// btnModsFolderPicker
 			// 
 			this.btnModsFolderPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnModsFolderPicker.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnModsFolderPicker.BackgroundImage")));
+			this.btnModsFolderPicker.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnModsFolderPicker.FlatAppearance.BorderSize = 0;
 			this.btnModsFolderPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnModsFolderPicker.Location = new System.Drawing.Point(599, 133);
 			this.btnModsFolderPicker.Name = "btnModsFolderPicker";
 			this.btnModsFolderPicker.Size = new System.Drawing.Size(28, 28);
 			this.btnModsFolderPicker.TabIndex = 14;
-			this.btnModsFolderPicker.Text = "···";
 			this.btnModsFolderPicker.UseMnemonic = false;
 			this.btnModsFolderPicker.UseVisualStyleBackColor = true;
 			// 

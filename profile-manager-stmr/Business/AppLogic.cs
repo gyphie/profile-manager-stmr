@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Win32;
+using Syroot.Windows.IO;
 
 namespace net.glympz.ProfileManagerSTMR.Business
 {
@@ -121,7 +122,7 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			// Attempt to get the Spintires: Mudrunner AppData folder
 			if (string.IsNullOrEmpty(appSettings.GameAppDataFolder) || !Directory.Exists(appSettings.GameAppDataFolder))
 			{
-				var gameAppDataFolder = AppLogic.PathCombine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), appSettings.GameAppDataFolderName);
+				var gameAppDataFolder = AppLogic.PathCombine(KnownFolders.RoamingAppData.ExpandedPath, appSettings.GameAppDataFolderName);
 				if (Directory.Exists(gameAppDataFolder))
 				{
 					appSettings.GameAppDataFolder = gameAppDataFolder;
