@@ -60,9 +60,9 @@ namespace spintires_mudrunner_profile_manager
 			this.GetInitialAppState();
 
 			// load the mod list
-			this.mods = Mod.LoadModList("");
+			this.mods = Mod.LoadModList(this.appSettings.ModFolder);
 
-			this.profiles = Profile.LoadProfiles(AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName));
+			this.profiles = Profile.LoadProfiles(AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName), this.mods);
 			this.lvProfiles.Items.Clear();
 			foreach (var profile in this.profiles)
 			{
@@ -92,8 +92,15 @@ namespace spintires_mudrunner_profile_manager
 
 			foreach (var mod in this.mods)
 			{
-				this.cblMods.Items.Add(mod.Name, false);
+				var item = new ListViewItem(mod.Name);
+				this.lvMods.Items.Add(item);
 			}
+
+			this.lvMods.Columns[0].Width = this.lvMods.ClientSize.Width;
+
+			this.lvMods.ItemChecked += lvMods_ItemChecked; // Manually assign this event handler after we've populated the item list to prevent it triggering unnecessarily.
+			this.lvProfiles.SelectedIndexChanged += lvProfiles_SelectedIndexChanged;
+			this.lvProfiles_SelectedIndexChanged(lvProfiles, new EventArgs());
 		}
 
 
@@ -118,7 +125,18 @@ namespace spintires_mudrunner_profile_manager
 			if (this.SelectedProfile != null)
 			{
 				this.txtProfileName.Text = this.SelectedProfile.Name;
-				// FIXME -- update the selected mods, suspend the ItemCheck event so we don't make unnecessary writes
+				this.lvMods.ItemChecked -= lvMods_ItemChecked;
+
+				foreach (ListViewItem listItem in this.lvMods.Items)
+				{
+					listItem.Checked = false;
+					if (this.SelectedProfile.ActivatedMods.Any(a => a.Name == listItem.Text))
+					{
+						listItem.Checked = true;
+					}
+				}
+
+				this.lvMods.ItemChecked += lvMods_ItemChecked;
 
 				this.panDetail.Enabled = true;
 			}
@@ -137,12 +155,6 @@ namespace spintires_mudrunner_profile_manager
 				this.hoverItemIndex = e.Item.Index;
 				this.lvProfiles.Invalidate();
 			}
-		}
-
-		private void cblMods_ItemCheck(object sender, ItemCheckEventArgs e)
-		{
-			// FIXME -- update the profile with the mods
-			this.WriteProfile(this.SelectedProfile);
 		}
 
 		private void txtProfileName_TextChanged(object sender, EventArgs e)
@@ -184,9 +196,27 @@ namespace spintires_mudrunner_profile_manager
 				return;
 			}
 
-			// FIXME -- delete the profile folders
+			try
+			{
+				var profilePath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName, this.SelectedProfile.Guid);
+				Directory.Delete(profilePath, recursive: true);
 
-			// FIXME -- if this is the active profile then delete the file indicator
+			}
+			catch
+			{
+				MessageBox.Show("The profile files could not be deleted.");
+				return;
+			}
+
+			try
+			{
+				if (this.SelectedProfileIndex == this.activeProfileIndex)
+				{
+					this.DeleteCurrentProfileGuid();
+				}
+			}
+			catch { }
+
 
 			var currentIndex = this.SelectedProfileIndex;
 
@@ -357,6 +387,16 @@ namespace spintires_mudrunner_profile_manager
 			catch { }
 		}
 
+		private void DeleteCurrentProfileGuid()
+		{
+			try
+			{
+				string profileGuidFile = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, "profile-manager-stmr.txt");
+				File.Delete(profileGuidFile);
+			}
+			catch { }
+		}
+
 		private void WriteProfile(Profile profile)
 		{
 			var profilePath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName, profile.Guid);
@@ -396,6 +436,37 @@ namespace spintires_mudrunner_profile_manager
 			e.DrawText();
 		}
 
+		private void frmMainWindow_Resize(object sender, EventArgs e)
+		{
+			this.lvMods.Columns[0].Width = this.lvMods.ClientSize.Width;
+		}
 
+		private void lvMods_ItemChecked(object sender, ItemCheckedEventArgs e)
+		{
+			if (this.SelectedProfile == null) return;
+
+			if (e.Item.Checked)
+			{
+				var mod = this.mods.FirstOrDefault(a => a.Name == e.Item.Text);
+				if (mod != null && !this.SelectedProfile.ActivatedMods.Contains(mod))
+				{
+					this.SelectedProfile.ActivatedMods.Add(mod);
+				}
+			}
+			else
+			{
+				int modIdx;
+				do
+				{
+					modIdx = this.SelectedProfile.ActivatedMods.FindIndex(a => a.Name == e.Item.Text);
+					if (modIdx >= 0)
+					{
+						this.SelectedProfile.ActivatedMods.RemoveAt(modIdx);
+					}
+				} while (modIdx != -1);
+			}
+
+			this.WriteProfile(this.SelectedProfile);
+		}
 	}
 }

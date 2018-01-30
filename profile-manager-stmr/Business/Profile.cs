@@ -40,7 +40,7 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			return JsonConvert.SerializeObject(simpleObject);
 		}
 
-		internal static List<Profile> LoadProfiles(string profileManagerPath)
+		internal static List<Profile> LoadProfiles(string profileManagerPath, List<Mod> availableMods)
 		{
 			var anonTemplate = new { name = "", guid = "", mods = new List<string>() };
 			var profiles = new List<Profile>();
@@ -49,12 +49,23 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			foreach (var profileFolder in profileFolders)
 			{
 				var pObj = JsonConvert.DeserializeAnonymousType(File.ReadAllText(AppLogic.PathCombine(profileFolder, "profile.json")), anonTemplate);
-				profiles.Add(new Profile
+				var profile = new Profile
 				{
 					Name = pObj.name,
 					Guid = pObj.guid,
-				});
-				// FIXME -- update list of active mods
+				};
+
+				foreach (var modPath in pObj.mods)
+				{
+					var mod = availableMods.FirstOrDefault(a => a.Path == modPath);
+					if (mod != null && !profile.ActivatedMods.Contains(mod))
+					{
+						profile.ActivatedMods.Add(mod);
+					}
+				}
+
+				profiles.Add(profile);
+
 			}
 
 			return profiles;

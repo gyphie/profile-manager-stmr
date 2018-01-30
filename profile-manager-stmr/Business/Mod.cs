@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,17 +12,50 @@ namespace net.glympz.ProfileManagerSTMR.Business
 		public string Name { get; set; } = string.Empty;
 		public string Path { get; set; } = string.Empty;
 
-		internal static List<Mod> LoadModList(string modPath)
+		public static List<Mod> LoadModList(string modPath)
 		{
-			return new List<Mod>
+			var mods = new List<Mod>();
+			foreach (var directoryName in Directory.GetDirectories(modPath))
 			{
-				new Mod { Name = "Place 1", Path = "isoplacian1/"},
-				new Mod { Name = "Place 2", Path = "isoplacian2/"},
-				new Mod { Name = "Place 3", Path = "isoplacian3/"},
-				new Mod { Name = "Place 4", Path = "isoplacian4/"},
-				new Mod { Name = "Place 5", Path = "isoplacian5/"},
-				new Mod { Name = "Place 6", Path = "isoplacian6/"},
-			};
+				var directory = new DirectoryInfo(directoryName);
+
+				var trueModPath = FindModPath(directory);	// Find the correct subdirectory where the mod files are stored
+				if (trueModPath != null)
+				{
+
+					var mod = new Mod
+					{
+						Name = directory.Name,
+						Path = trueModPath
+					};
+
+					mods.Add(mod);
+				}
+			}
+
+			return mods;
+		}
+
+		private static string FindModPath(DirectoryInfo mainDirectory)
+		{
+			if (Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "levels")) ||
+				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "classes")) ||
+				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "meshes")) ||
+				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "textures")) ||
+				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "billboards"))
+			)
+			{
+				return mainDirectory.Name;
+			}
+			else
+			{
+				foreach (var childDirectory in mainDirectory.GetDirectories())
+				{
+					return AppLogic.PathCombine(mainDirectory.Name, FindModPath(childDirectory));
+				}
+			}
+
+			return null;
 		}
 	}
 }
