@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using net.glympz.ProfileManagerSTMR.Business;
+using net.glympz.ProfileManagerSTMR.Properties;
 
 namespace net.glympz.ProfileManagerSTMR
 {
@@ -19,6 +20,7 @@ namespace net.glympz.ProfileManagerSTMR
 		public frmSettingsDialog()
 		{
 			InitializeComponent();
+			this.Icon = Resources.ProfileManagerIcon;
 		}
 
 		internal DialogResult ShowFormDialog(IWin32Window owner, ApplicationSettings settings)

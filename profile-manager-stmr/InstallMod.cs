@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using net.glympz.ProfileManagerSTMR.Business;
+using net.glympz.ProfileManagerSTMR.Properties;
 using SharpCompress.Readers;
 using Syroot.Windows.IO;
 
@@ -22,6 +23,7 @@ namespace net.glympz.ProfileManagerSTMR
 		public frmInstallMod()
 		{
 			InitializeComponent();
+			this.Icon = Resources.ProfileManagerIcon;
 		}
 
 		public DialogResult ShowForm(IWin32Window owner, string modFolderPath)

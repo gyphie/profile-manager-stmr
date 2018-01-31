@@ -15,6 +15,7 @@ using System.Xml;
 using Microsoft.Win32;
 using net.glympz.ProfileManagerSTMR;
 using net.glympz.ProfileManagerSTMR.Business;
+using net.glympz.ProfileManagerSTMR.Properties;
 using SharpCompress.Readers;
 
 namespace spintires_mudrunner_profile_manager
@@ -24,6 +25,7 @@ namespace spintires_mudrunner_profile_manager
 		public frmMainWindow()
 		{
 			InitializeComponent();
+			this.Icon = Resources.ProfileManagerIcon;
 			this.settingsDialog = new frmSettingsDialog();
 			this.workingDialog = new frmWorkingDialog();
 			this.installModDialog = new frmInstallMod();

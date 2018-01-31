@@ -113,9 +113,9 @@ namespace net.glympz.ProfileManagerSTMR.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon spintires {
+        internal static System.Drawing.Icon ProfileManagerIcon {
             get {
-                object obj = ResourceManager.GetObject("spintires", resourceCulture);
+                object obj = ResourceManager.GetObject("ProfileManagerIcon", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
