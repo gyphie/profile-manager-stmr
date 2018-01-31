@@ -18,7 +18,7 @@ namespace net.glympz.ProfileManagerSTMR
 	{
 		private OpenFileDialog modFilePicker;
 		private string modFolderPath;
-
+		private frmWorkingDialog workingDialog;
 		public frmInstallMod()
 		{
 			InitializeComponent();
@@ -32,6 +32,7 @@ namespace net.glympz.ProfileManagerSTMR
 
 		private void frmInstallMod_Load(object sender, EventArgs e)
 		{
+			this.workingDialog = new frmWorkingDialog();
 			this.txtModFilePath.ReadOnly = true;
 			this.txtModFilePath.Text = "";
 			this.txtModName.Text = "";
@@ -69,19 +70,15 @@ namespace net.glympz.ProfileManagerSTMR
 
 		private void DecompressArchive(string archivePath, string targetPath)
 		{
-			SharpCompress.Archives.ArchiveFactory.WriteToDirectory(archivePath, targetPath, new ExtractionOptions() { Overwrite = false, PreserveFileTime = true, ExtractFullPath = true });
-
-			//using (var fileStream = File.Open(archivePath, FileMode.Open, FileAccess.Read))
-			//using (var reader = SharpCompress.Readers.ReaderFactory.Open(fileStream, new SharpCompress.Readers.ReaderOptions { LeaveStreamOpen = true }))
-			//{
-			//	while (reader.MoveToNextEntry())
-			//	{
-			//		if (!reader.Entry.IsDirectory)
-			//		{
-			//			reader.WriteEntryToDirectory(targetPath, new ExtractionOptions { ExtractFullPath = true, PreserveFileTime = true });
-			//		}
-			//	}
-			//}
+			SharpCompress.Archives.ArchiveFactory.WriteToDirectory(
+				archivePath,
+				targetPath,
+				new ExtractionOptions() {
+					Overwrite = false,
+					PreserveFileTime = true,
+					ExtractFullPath = true
+				}
+			);
 		}
 
 		private void bgwInstaller_DoWork(object sender, DoWorkEventArgs e)
@@ -101,6 +98,7 @@ namespace net.glympz.ProfileManagerSTMR
 		private void bgwInstaller_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			this.Enabled = true;
+
 			if (e.Error != null)
 			{
 				var bgwException = e.Error as BackgroundWorkerRunException;
@@ -127,6 +125,7 @@ namespace net.glympz.ProfileManagerSTMR
 				return;
 			}
 
+			this.workingDialog.HideWorking();
 			this.DialogResult = DialogResult.OK;
 		}
 
@@ -165,6 +164,7 @@ namespace net.glympz.ProfileManagerSTMR
 
 			this.Enabled = false;
 			this.bgwInstaller.RunWorkerAsync(new WorkerData { ArchivePath = this.txtModFilePath.Text, ModPath = modPath });
+			this.workingDialog.ShowWorking("Installing mod...");
 		}
 
 		private class WorkerData

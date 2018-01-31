@@ -373,7 +373,7 @@ namespace spintires_mudrunner_profile_manager
 		private void bgwSwitchProfile_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			var workerData = e.Result as WorkerData;
-			this.workingDialog.Hide();
+			this.workingDialog.HideWorking();
 
 			if (e.Error != null)
 			{

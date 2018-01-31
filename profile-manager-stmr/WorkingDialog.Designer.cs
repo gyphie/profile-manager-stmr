@@ -58,7 +58,7 @@ namespace net.glympz.ProfileManagerSTMR
 			// frmWorkingDialog
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(337, 157);
+			this.ClientSize = new System.Drawing.Size(333, 153);
 			this.ControlBox = false;
 			this.Controls.Add(this.progressBar);
 			this.Controls.Add(this.lblWorkingMessage);
@@ -70,7 +70,6 @@ namespace net.glympz.ProfileManagerSTMR
 			this.ShowInTaskbar = false;
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.TopMost = true;
 			this.ResumeLayout(false);
 
 		}
