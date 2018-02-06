@@ -26,21 +26,22 @@ namespace spintires_mudrunner_profile_manager
 		{
 			InitializeComponent();
 			this.Icon = Resources.ProfileManagerIcon;
-			this.settingsDialog = new frmSettingsDialog();
+			this.settingsDialog = new frmSettings();
 			this.workingDialog = new frmWorkingDialog();
 			this.installModDialog = new frmInstallMod();
+			this.modDetailDialog = new frmModDetails();
 			this.bgwSwitchProfile.DoWork += bgwSwitchProfile_DoWork;
 			this.bgwSwitchProfile.RunWorkerCompleted += bgwSwitchProfile_RunWorkerCompleted;
 		}
 
 		private ApplicationSettings appSettings;
-		private frmSettingsDialog settingsDialog;
+		private frmSettings settingsDialog;
 		private frmWorkingDialog workingDialog;
 		private frmInstallMod installModDialog;
+		private frmModDetails modDetailDialog;
 		private List<Profile> profiles;
 		private List<Mod> mods;
 		private int activeProfileIndex = -1;
-		private int hoverItemIndex = -1;
 
 		private int SelectedProfileIndex
 		{
@@ -90,7 +91,6 @@ namespace spintires_mudrunner_profile_manager
 			this.lvProfiles.SelectedIndexChanged -= lvProfiles_SelectedIndexChanged;
 
 			this.activeProfileIndex = -1;
-			this.hoverItemIndex = -1;
 
 			this.lvProfiles.Items.Clear();
 			this.lvMods.Items.Clear();
@@ -102,10 +102,11 @@ namespace spintires_mudrunner_profile_manager
 		private void LoadAppData()
 		{
 			this.ResetAppData();
-			
+
 			// load the mod list
-			this.mods = Mod.LoadModList(this.appSettings.ModFolder);
-			this.profiles = Profile.LoadProfiles(AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName), this.mods);
+			var profilePath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName);
+			this.mods = Mod.LoadModList(profilePath, this.appSettings.ModFolder);
+			this.profiles = Profile.LoadProfiles(profilePath, this.mods);
 
 			foreach (var profile in this.profiles)
 			{
@@ -165,23 +166,28 @@ namespace spintires_mudrunner_profile_manager
 
 				this.lvMods.ItemChecked += lvMods_ItemChecked;
 
-				this.panDetail.Enabled = true;
+				this.EnableProfileRelatedControls(true);
 			}
 			else
 			{
+				foreach (ListViewItem listItem in this.lvMods.Items)
+				{
+					listItem.Checked = false;
+				}
+
 				this.txtProfileName.Text = "";
-				this.panDetail.Enabled = false;
+				this.EnableProfileRelatedControls(false);
 
 			}
 		}
-		private void lvProfiles_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
+
+		private void EnableProfileRelatedControls(bool enable)
 		{
-			Console.WriteLine("hover");
-			if (this.hoverItemIndex != e.Item.Index)
-			{
-				this.hoverItemIndex = e.Item.Index;
-				this.lvProfiles.Invalidate();
-			}
+			this.panDetail.Enabled = enable;
+			this.btnDelete.Enabled = enable;
+			this.btnSwitch.Enabled = enable;
+			this.btnLaunch.Enabled = enable;
+
 		}
 
 		private void txtProfileName_TextChanged(object sender, EventArgs e)
@@ -295,12 +301,12 @@ namespace spintires_mudrunner_profile_manager
 			// Check whether the game is currently running
 			if (AppLogic.IsProcessRunning(AppLogic.PathCombine(this.appSettings.GameFolder, this.appSettings.GameExecutable)))
 			{
-				MessageBox.Show("Spintires: Mudrunner is currently running. Exit the game before switching profiles.", "Spintires: Mudrunner already running", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				MessageBox.Show("Spintires: MudRunner is currently running. Exit the game before switching profiles.", "Spintires: MudRunner already running", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				return;
 			}
 
 			this.bgwSwitchProfile.RunWorkerAsync(workerData);
-			this.workingDialog.ShowWorking();
+			this.workingDialog.ShowWorking(workerData.LaunchGame ? "Launching Spintires: MudRunner..." : "Switching profiles...");
 		}
 
 		private void bgwSwitchProfile_DoWork(object sender, DoWorkEventArgs e)
@@ -438,6 +444,11 @@ namespace spintires_mudrunner_profile_manager
 			File.WriteAllText(AppLogic.PathCombine(profilePath, "profile.json"), profile.ToJson());
 		}
 
+		private void WriteMods(List<Mod> mods)
+		{
+			Mod.WriteMods(AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName), mods);
+		}
+
 		private void CreateXML(Profile profile)
 		{
 			string configFilePath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, "config.xml");
@@ -498,31 +509,31 @@ namespace spintires_mudrunner_profile_manager
 			configXMLDocument.Save(configFilePath);
 		}
 
-		private void lvProfiles_DrawItem(object sender, DrawListViewItemEventArgs e)
-		{
-			Brush brush = null;
+		//private void lvProfiles_DrawItem(object sender, DrawListViewItemEventArgs e)
+		//{
+		//	Brush brush = null;
 
-			if (e.Item.Selected)
-			{
-				brush = new SolidBrush(SystemColors.Highlight);
-			}
-			else if (e.ItemIndex == this.activeProfileIndex)
-			{
-				brush = new SolidBrush(Color.FromArgb(0, 192, 0));
-			}
-			else if (e.ItemIndex == this.hoverItemIndex)	// Hover
-			{
-				brush = new SolidBrush(SystemColors.HotTrack);
-			}
-			else
-			{
-				brush = new SolidBrush(e.Item.BackColor);
-			}
+		//	if (e.Item.Selected)
+		//	{
+		//		brush = new SolidBrush(SystemColors.Highlight);
+		//	}
+		//	else if (e.ItemIndex == this.activeProfileIndex)
+		//	{
+		//		brush = new SolidBrush(Color.FromArgb(0, 192, 0));
+		//	}
+		//	else if (e.ItemIndex == this.hoverItemIndex)    // Hover
+		//	{
+		//		brush = new SolidBrush(SystemColors.HotTrack);
+		//	}
+		//	else
+		//	{
+		//		brush = new SolidBrush(e.Item.BackColor);
+		//	}
 
-			e.Graphics.FillRectangle(brush, e.Bounds);
+		//	e.Graphics.FillRectangle(brush, e.Bounds);
 
-			e.DrawText();
-		}
+		//	e.DrawText();
+		//}
 
 		private void frmMainWindow_Resize(object sender, EventArgs e)
 		{
@@ -563,6 +574,46 @@ namespace spintires_mudrunner_profile_manager
 			if (result == DialogResult.OK)
 			{
 				this.LoadAppData();
+			}
+		}
+
+		private void lvMods_DoubleClick(object sender, EventArgs e)
+		{
+			int modIdx = lvMods.SelectedIndices.Count > 0 ? lvMods.SelectedIndices[0] : -1;
+
+			if (modIdx < 0) return;
+
+			var mod = this.mods[modIdx];
+
+			var result = this.modDetailDialog.ShowForm(this, mod, this.appSettings.ModFolder);
+			if (result == DialogResult.OK)
+			{
+				if ((this.modDetailDialog.Tag as string) == "delete")
+				{
+					Mod.DeleteMod(mod);
+				}
+
+				Mod.WriteMods(AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName), this.mods);
+			}
+		}
+
+		// Technique from https://stackoverflow.com/questions/1406887/only-change-a-listviewitems-checked-state-if-the-checkbox-is-clicked
+		private bool inhibitModAutoCheck = false;
+		private void lvMods_MouseDown(object sender, MouseEventArgs e)
+		{
+			this.inhibitModAutoCheck = true;
+		}
+
+		private void lvMods_MouseUp(object sender, MouseEventArgs e)
+		{
+			this.inhibitModAutoCheck = false;
+		}
+
+		private void lvMods_ItemCheck(object sender, ItemCheckEventArgs e)
+		{
+			if (this.inhibitModAutoCheck)
+			{
+				e.NewValue = e.CurrentValue;
 			}
 		}
 	}

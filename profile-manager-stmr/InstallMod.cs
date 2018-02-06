@@ -45,7 +45,7 @@ namespace net.glympz.ProfileManagerSTMR
 		{
 			this.modFilePicker = new OpenFileDialog();
 			this.modFilePicker.RestoreDirectory = false;
-			this.modFilePicker.Title = "Install a Spintires: Mudrunner Mod";
+			this.modFilePicker.Title = "Install a Spintires: MudRunner Mod";
 			this.modFilePicker.Multiselect = false;
 
 			string initDir = KnownFolders.Downloads.ExpandedPath;

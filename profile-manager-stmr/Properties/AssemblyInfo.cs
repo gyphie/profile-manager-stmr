@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Profile Manager for Spintires: Mudrunner")]
+[assembly: AssemblyTitle("Profile Manager for Spintires: MudRunner")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Gympz")]
-[assembly: AssemblyProduct("Profile Manager for Spintires: Mudrunner")]
+[assembly: AssemblyProduct("Profile Manager for Spintires: MudRunner")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

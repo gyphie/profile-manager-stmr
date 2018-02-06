@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -13,11 +14,11 @@ using net.glympz.ProfileManagerSTMR.Properties;
 
 namespace net.glympz.ProfileManagerSTMR
 {
-	public partial class frmSettingsDialog : Form
+	public partial class frmSettings : Form
 	{
 		private ApplicationSettings appSettings;
 
-		public frmSettingsDialog()
+		public frmSettings()
 		{
 			InitializeComponent();
 			this.Icon = Resources.ProfileManagerIcon;
@@ -49,12 +50,12 @@ namespace net.glympz.ProfileManagerSTMR
 			}
 			if (!Directory.Exists(gameFolder) || !File.Exists(AppLogic.PathCombine(gameFolder, this.appSettings.GameExecutable)))
 			{
-				MessageBox.Show("The Spintires: Mudrunner folder was not found.");
+				MessageBox.Show("The Spintires: MudRunner folder was not found.");
 				return;
 			}
 			if (!Directory.Exists(gameAppDataFolder))
 			{
-				MessageBox.Show("The Spintires: Mudrunner AppData folder was not found.");
+				MessageBox.Show("The Spintires: MudRunner AppData folder was not found.");
 				return;
 			}
 
@@ -98,6 +99,37 @@ namespace net.glympz.ProfileManagerSTMR
 		{
 			this.DialogResult = DialogResult.Cancel;
 			return;
+		}
+
+		private void btnOpenFolderX_Click(object sender, EventArgs e)
+		{
+			string folder = "";
+			if (sender == this.btnOpenFolderSteam)
+			{
+				folder = this.txtSteamFolder.Text;
+			}
+			else if (sender == this.btnOpenFolderGame)
+			{
+				folder = this.txtGameFolder.Text;
+			}
+			else if (sender == this.btnOpenFolderAppData)
+			{
+				folder = this.txtAppDataFolder.Text;
+			}
+			else if (sender == this.btnOpenFolderMods)
+			{
+				folder = this.txtModsFolder.Text;
+			}
+
+			if (!string.IsNullOrEmpty(folder) && Directory.Exists(folder))
+			{
+				try
+				{
+					Process.Start("explorer.exe", folder);
+				}
+				catch { }
+				// open in explorer
+			}
 		}
 	}
 }
