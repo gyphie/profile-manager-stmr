@@ -60,6 +60,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\dependencies\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
     </Reference>

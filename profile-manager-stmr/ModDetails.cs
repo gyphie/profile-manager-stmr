@@ -1,18 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using net.glympz.ProfileManagerSTMR.Business;
 using net.glympz.ProfileManagerSTMR.Properties;
-using SharpCompress.Readers;
-using Syroot.Windows.IO;
 
 namespace net.glympz.ProfileManagerSTMR
 {
@@ -28,14 +19,17 @@ namespace net.glympz.ProfileManagerSTMR
 
 		public DialogResult ShowForm(IWin32Window owner, Mod mod, string modPath)
 		{
+			this.Tag = null;
+			this.DialogResult = DialogResult.None;
+
 			this.mod = mod;
 
 			this.txtModFilePath.Text = AppLogic.PathCombine(modPath, mod.Path);
 			this.txtModName.Text = mod.Name;
-			this.cmboModType.SelectedValue = Enums.ModTypeToString(mod.Type);
-			this.cmboRating.SelectedValue = Enums.RatingToString(mod.Rating);
+			this.cmboModType.SelectedItem = Enums.ModTypeToString(mod.Type);
+			this.cmboRating.SelectedItem = Enums.RatingToString(mod.Rating);
 			this.dtpInstalledOn.Value = mod.InstallationDate;
-
+			this.cbMultiplayer.Checked = mod.Multiplayer;
 
 			return this.ShowDialog(owner);
 		}
@@ -61,19 +55,28 @@ namespace net.glympz.ProfileManagerSTMR
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
+			string modName = this.txtModName.Text;
+			ModType modType = Enums.StringToModType(this.cmboModType.SelectedItem as string);
+			Rating rating = Enums.StringToRating(this.cmboRating.SelectedItem as string);
 
+			this.mod.Name = modName;
+			this.mod.Type = modType;
+			this.mod.Rating = rating;
+			this.mod.InstallationDate = this.dtpInstalledOn.Value;
+			this.mod.Multiplayer = this.cbMultiplayer.Checked;
+
+			this.DialogResult = DialogResult.OK;
 		}
 
 		private void btnDelete_Click(object sender, EventArgs e)
 		{
-			if (MessageBox.Show("Deleting this mod will delete the entire mod folder from disk", "Delete mod") != DialogResult.OK)
+			if (DialogResult.OK != MessageBox.Show("Deleting this mod will delete this mod folder from disk.", "Delete mod", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
 			{
 				return;
 			}
 
-			// Delete the mod folder
-
-			// Report back the main form that there has been a deletion and the mod list needs to be reloaded
+			this.Tag = "delete";
+			this.DialogResult = DialogResult.OK;
 		}
 	}
 }

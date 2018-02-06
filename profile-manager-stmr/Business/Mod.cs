@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -14,14 +15,34 @@ namespace net.glympz.ProfileManagerSTMR.Business
 		private const string MOD_META_DATA_FILENAME = "mod-meta-data.json";
 
 		public string Name { get; set; } = string.Empty;
+		public string RootPath { get; set; } = string.Empty;
 		public string Path { get; set; } = string.Empty;
 		public ModType Type { get; set; } = ModType.Unknown;
 		public Rating Rating { get; set; } = Rating.None;
 		public DateTime InstallationDate { get; set; } = DateTime.Now;
+		public bool Multiplayer { get; set; } = false;
 
-		public static void DeleteMod(string modPath, Mod mod)
+		public static bool DeleteMod(string modPath, Mod mod)
 		{
+			try
+			{
+				if (string.IsNullOrEmpty(mod.RootPath))
+				{
+					return false;
+				}
 
+				var modFolder = AppLogic.PathCombine(modPath, mod.RootPath);
+				if (Directory.Exists(modFolder))
+				{
+					FileSystem.DeleteDirectory(modFolder, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+
+					//Directory.Delete(modFolder, true);
+					return true;
+				}
+			}
+			catch { }
+
+			return false;
 		}
 
 		public static void WriteMods(string profileManagerPath, List<Mod> mods)
@@ -70,11 +91,19 @@ namespace net.glympz.ProfileManagerSTMR.Business
 						mod = new Mod
 						{
 							Name = directory.Name,
+							RootPath = directory.Name,
 							Path = trueModPath,
-							Type =  Mod.DetectType(AppLogic.PathCombine(modPath, trueModPath)),
 							Rating = Rating.None,
 							InstallationDate = DateTime.Now,
 						};
+
+						mod.Type = Mod.DetectType(AppLogic.PathCombine(modPath, trueModPath), out bool multiplayer);
+						mod.Multiplayer = multiplayer;
+					}
+					else
+					{
+						mod.Name = string.IsNullOrWhiteSpace(mod.Name) ? directory.Name : mod.Name;
+						mod.RootPath = directory.Name;
 					}
 
 					foundMods.Add(mod);
@@ -95,7 +124,8 @@ namespace net.glympz.ProfileManagerSTMR.Business
 				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "classes")) ||
 				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "meshes")) ||
 				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "textures")) ||
-				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "billboards"))
+				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "billboards")) ||
+				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "vehicles"))
 			)
 			{
 				return mainDirectory.Name;
@@ -111,9 +141,25 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			return null;
 		}
 
-		private static ModType DetectType(string modPath)
+		private static ModType DetectType(string modPath, out bool multiplayer)
 		{
-			return ModType.Unknown;
+			multiplayer = false;
+			if (Directory.Exists(AppLogic.PathCombine(modPath, "levels")))
+			{
+				if (Directory.GetDirectories(modPath).Length == 1)
+				{
+					multiplayer = true;
+				}
+
+				return ModType.Map;
+			}
+
+			if (Directory.Exists(AppLogic.PathCombine(modPath, "vehicles")))
+			{
+				return ModType.Vehicle;
+			}
+
+			return ModType.Other;
 		}
 
 		private class SimpleMod
@@ -123,6 +169,7 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			public int type;
 			public int rating;
 			public long installationdate;
+			public bool multiplayer;
 
 			public SimpleMod() { }
 			public SimpleMod(Mod mod)
@@ -132,6 +179,7 @@ namespace net.glympz.ProfileManagerSTMR.Business
 				type = (int)mod.Type;
 				rating = (int)mod.Rating;
 				installationdate = mod.InstallationDate.Ticks;
+				multiplayer = mod.Multiplayer;
 			}
 
 			public Mod ToMod()
@@ -142,7 +190,8 @@ namespace net.glympz.ProfileManagerSTMR.Business
 					Path = this.path,
 					Type = Enums.IntToModType(this.type),
 					Rating = Enums.IntToRating(this.rating),
-					InstallationDate = new DateTime(this.installationdate)
+					InstallationDate = new DateTime(this.installationdate),
+					Multiplayer = this.multiplayer
 				};
 
 			}

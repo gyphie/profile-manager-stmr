@@ -42,6 +42,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.lblSteamFolder = new System.Windows.Forms.Label();
 			this.txtModFilePath = new System.Windows.Forms.TextBox();
 			this.btnDelete = new System.Windows.Forms.Button();
+			this.cbMultiplayer = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// btnCancel
@@ -54,7 +55,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnCancel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnCancel.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.btnCancel.Location = new System.Drawing.Point(498, 194);
+			this.btnCancel.Location = new System.Drawing.Point(498, 239);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(74, 40);
 			this.btnCancel.TabIndex = 12;
@@ -70,7 +71,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnSave.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.btnSave.Location = new System.Drawing.Point(408, 194);
+			this.btnSave.Location = new System.Drawing.Point(408, 239);
 			this.btnSave.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(83, 40);
@@ -106,7 +107,6 @@ namespace net.glympz.ProfileManagerSTMR
 			this.cmboModType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cmboModType.FormattingEnabled = true;
 			this.cmboModType.Items.AddRange(new object[] {
-            "Autodetect",
             "Map",
             "Vehicle",
             "Other"});
@@ -212,13 +212,12 @@ namespace net.glympz.ProfileManagerSTMR
 			// 
 			this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btnDelete.BackColor = System.Drawing.SystemColors.ControlLight;
-			this.btnDelete.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.btnDelete.FlatAppearance.BorderColor = System.Drawing.Color.Firebrick;
 			this.btnDelete.FlatAppearance.BorderSize = 0;
 			this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnDelete.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.btnDelete.Location = new System.Drawing.Point(17, 194);
+			this.btnDelete.Location = new System.Drawing.Point(17, 239);
 			this.btnDelete.Name = "btnDelete";
 			this.btnDelete.Size = new System.Drawing.Size(74, 40);
 			this.btnDelete.TabIndex = 12;
@@ -226,13 +225,24 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnDelete.UseVisualStyleBackColor = false;
 			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
 			// 
+			// cbMultiplayer
+			// 
+			this.cbMultiplayer.AutoSize = true;
+			this.cbMultiplayer.Location = new System.Drawing.Point(17, 191);
+			this.cbMultiplayer.Name = "cbMultiplayer";
+			this.cbMultiplayer.Size = new System.Drawing.Size(108, 25);
+			this.cbMultiplayer.TabIndex = 26;
+			this.cbMultiplayer.Text = "Multiplayer";
+			this.cbMultiplayer.UseVisualStyleBackColor = true;
+			// 
 			// frmModDetails
 			// 
 			this.AcceptButton = this.btnSave;
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.BackColor = System.Drawing.Color.White;
 			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(584, 246);
+			this.ClientSize = new System.Drawing.Size(584, 291);
+			this.Controls.Add(this.cbMultiplayer);
 			this.Controls.Add(this.btnOpenFolder);
 			this.Controls.Add(this.lblSteamFolder);
 			this.Controls.Add(this.txtModFilePath);
@@ -250,7 +260,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(600, 285);
+			this.MinimumSize = new System.Drawing.Size(600, 330);
 			this.Name = "frmModDetails";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -276,5 +286,6 @@ namespace net.glympz.ProfileManagerSTMR
 		private System.Windows.Forms.Label lblSteamFolder;
 		private System.Windows.Forms.TextBox txtModFilePath;
 		private System.Windows.Forms.Button btnDelete;
+		private System.Windows.Forms.CheckBox cbMultiplayer;
 	}
 }

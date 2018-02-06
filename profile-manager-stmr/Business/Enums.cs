@@ -31,10 +31,23 @@ namespace net.glympz.ProfileManagerSTMR.Business
 					return "Map";
 				case ModType.Vehicle:
 					return "Vehicle";
-				case ModType.Other:
-					return "Other";
 				default:
-					return "Unknown";
+					return "Other";
+			}
+		}
+		public static ModType StringToModType(string modType)
+		{
+			if (modType == "Map")
+			{
+				return ModType.Map;
+			}
+			else if (modType == "Vehicle")
+			{
+				return ModType.Vehicle;
+			}
+			else
+			{
+				return ModType.Other;
 			}
 		}
 
@@ -63,6 +76,33 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			}
 		}
 
+		public static string RatingToEmoji(Rating rating)
+		{
+			switch (rating)
+			{
+				case Rating.ThumbsUp:
+					return "👍";
+				case Rating.ThumbsDown:
+					return "👎";
+				default:
+					return "";
+			}
+		}
+		public static Rating StringToRating(string rating)
+		{
+			if (rating == "Thumbs Up")
+			{
+				return Rating.ThumbsUp;
+			}
+			else if (rating == "Thumbs Down")
+			{
+				return Rating.ThumbsDown;
+			}
+			else
+			{
+				return Rating.None;
+			}
+		}
 		public static Rating IntToRating(int ratingID)
 		{
 			try

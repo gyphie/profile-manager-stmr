@@ -34,8 +34,11 @@ namespace spintires_mudrunner_profile_manager
 			this.txtProfileName = new System.Windows.Forms.TextBox();
 			this.panDetail = new System.Windows.Forms.Panel();
 			this.lvMods = new System.Windows.Forms.ListView();
-			this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.lblMods = new System.Windows.Forms.Label();
+			this.chModName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.chInstallationDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.chType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.chRating = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.chMultiplayer = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.lblProfileName = new System.Windows.Forms.Label();
 			this.btnAddMod = new System.Windows.Forms.Button();
 			this.btnSwitch = new System.Windows.Forms.Button();
@@ -111,7 +114,6 @@ namespace spintires_mudrunner_profile_manager
 			this.panDetail.AutoScroll = true;
 			this.panDetail.BackColor = System.Drawing.Color.White;
 			this.panDetail.Controls.Add(this.lvMods);
-			this.panDetail.Controls.Add(this.lblMods);
 			this.panDetail.Controls.Add(this.lblProfileName);
 			this.panDetail.Controls.Add(this.txtProfileName);
 			this.panDetail.Location = new System.Drawing.Point(250, 0);
@@ -127,15 +129,19 @@ namespace spintires_mudrunner_profile_manager
 			this.lvMods.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.lvMods.CheckBoxes = true;
 			this.lvMods.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
+            this.chModName,
+            this.chInstallationDate,
+            this.chType,
+            this.chRating,
+            this.chMultiplayer});
 			this.lvMods.FullRowSelect = true;
-			this.lvMods.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+			this.lvMods.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.lvMods.LabelWrap = false;
-			this.lvMods.Location = new System.Drawing.Point(14, 114);
+			this.lvMods.Location = new System.Drawing.Point(14, 90);
 			this.lvMods.MultiSelect = false;
 			this.lvMods.Name = "lvMods";
 			this.lvMods.ShowGroups = false;
-			this.lvMods.Size = new System.Drawing.Size(520, 226);
+			this.lvMods.Size = new System.Drawing.Size(520, 250);
 			this.lvMods.TabIndex = 10;
 			this.lvMods.UseCompatibleStateImageBehavior = false;
 			this.lvMods.View = System.Windows.Forms.View.Details;
@@ -144,18 +150,26 @@ namespace spintires_mudrunner_profile_manager
 			this.lvMods.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lvMods_MouseDown);
 			this.lvMods.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lvMods_MouseUp);
 			// 
-			// columnHeader1
+			// chModName
 			// 
-			this.columnHeader1.Width = 300;
+			this.chModName.Text = "Mod";
+			this.chModName.Width = 278;
 			// 
-			// lblMods
+			// chInstallationDate
 			// 
-			this.lblMods.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblMods.Location = new System.Drawing.Point(10, 90);
-			this.lblMods.Name = "lblMods";
-			this.lblMods.Size = new System.Drawing.Size(49, 21);
-			this.lblMods.TabIndex = 7;
-			this.lblMods.Text = "Mods";
+			this.chInstallationDate.Text = "Date";
+			// 
+			// chType
+			// 
+			this.chType.Text = "Type";
+			// 
+			// chRating
+			// 
+			this.chRating.Text = "Rating";
+			// 
+			// chMultiplayer
+			// 
+			this.chMultiplayer.Text = "MP";
 			// 
 			// lblProfileName
 			// 
@@ -283,16 +297,19 @@ namespace spintires_mudrunner_profile_manager
 		private System.Windows.Forms.TextBox txtProfileName;
 		private System.Windows.Forms.Panel panDetail;
 		private System.Windows.Forms.Button btnDelete;
-		private System.Windows.Forms.Label lblMods;
 		private System.Windows.Forms.Button btnLaunch;
 		private System.Windows.Forms.Button btnSwitch;
 		private System.ComponentModel.BackgroundWorker bgwSwitchProfile;
 		private System.Windows.Forms.Button btnSettings;
 		private System.Windows.Forms.ListView lvMods;
-		private System.Windows.Forms.ColumnHeader columnHeader1;
+		private System.Windows.Forms.ColumnHeader chModName;
 		private System.Windows.Forms.Button btnAddMod;
 		private System.Windows.Forms.ColumnHeader columnHeader2;
 		private System.Windows.Forms.Label lblProfileName;
+		private System.Windows.Forms.ColumnHeader chType;
+		private System.Windows.Forms.ColumnHeader chRating;
+		private System.Windows.Forms.ColumnHeader chMultiplayer;
+		private System.Windows.Forms.ColumnHeader chInstallationDate;
 	}
 }
 

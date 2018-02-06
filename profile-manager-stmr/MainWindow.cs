@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using net.glympz.ProfileManagerSTMR;
 using net.glympz.ProfileManagerSTMR.Business;
@@ -32,6 +33,11 @@ namespace spintires_mudrunner_profile_manager
 			this.modDetailDialog = new frmModDetails();
 			this.bgwSwitchProfile.DoWork += bgwSwitchProfile_DoWork;
 			this.bgwSwitchProfile.RunWorkerCompleted += bgwSwitchProfile_RunWorkerCompleted;
+
+			this.lvMods.Columns[1].Width = 90;
+			this.lvMods.Columns[2].Width = 90;
+			this.lvMods.Columns[3].Width = 60;
+			this.lvMods.Columns[4].Width = 60;
 		}
 
 		private ApplicationSettings appSettings;
@@ -115,11 +121,17 @@ namespace spintires_mudrunner_profile_manager
 
 			foreach (var mod in this.mods)
 			{
-				var item = new ListViewItem(mod.Name);
-				this.lvMods.Items.Add(item);
+				this.lvMods.Items.Add(mod.Name)
+					.SubItems.AddRange(new string[] {
+						mod.InstallationDate.ToShortDateString(),
+						Enums.ModTypeToString(mod.Type),
+						Enums.RatingToEmoji(mod.Rating),
+						mod.Multiplayer ? "X" : ""
+					});
+
 			}
 
-			this.lvMods.Columns[0].Width = this.lvMods.ClientSize.Width;
+			this.frmMainWindow_Resize(this, new EventArgs());
 
 
 			this.activeProfileIndex = this.profiles.FindIndex(a => a.Guid == this.ReadCurrentProfileGuid());
@@ -187,7 +199,6 @@ namespace spintires_mudrunner_profile_manager
 			this.btnDelete.Enabled = enable;
 			this.btnSwitch.Enabled = enable;
 			this.btnLaunch.Enabled = enable;
-
 		}
 
 		private void txtProfileName_TextChanged(object sender, EventArgs e)
@@ -232,7 +243,7 @@ namespace spintires_mudrunner_profile_manager
 			try
 			{
 				var profilePath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName, this.SelectedProfile.Guid);
-				Directory.Delete(profilePath, recursive: true);
+				FileSystem.DeleteDirectory(profilePath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
 
 			}
 			catch
@@ -537,7 +548,15 @@ namespace spintires_mudrunner_profile_manager
 
 		private void frmMainWindow_Resize(object sender, EventArgs e)
 		{
-			this.lvMods.Columns[0].Width = this.lvMods.ClientSize.Width;
+			var nameWidth = this.lvMods.Columns[0].Width;
+			var otherColumnWidth = -nameWidth;
+			foreach (ColumnHeader column in this.lvMods.Columns)
+			{
+				otherColumnWidth += column.Width;
+			}
+
+
+			this.lvMods.Columns[0].Width = this.lvMods.ClientSize.Width - otherColumnWidth;
 		}
 
 		private void lvMods_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -590,10 +609,20 @@ namespace spintires_mudrunner_profile_manager
 			{
 				if ((this.modDetailDialog.Tag as string) == "delete")
 				{
-					Mod.DeleteMod(mod);
+					if (Mod.DeleteMod(this.appSettings.ModFolder, mod))
+					{
+						this.mods.Remove(mod);
+					}
+					else
+					{
+						MessageBox.Show("The mod could not be deleted.");
+					}
 				}
+				// else the mod object was updated by the form and is ready to be saved
 
 				Mod.WriteMods(AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName), this.mods);
+
+				this.LoadAppData();
 			}
 		}
 
