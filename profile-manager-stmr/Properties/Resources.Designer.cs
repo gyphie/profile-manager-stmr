@@ -93,6 +93,16 @@ namespace net.glympz.ProfileManagerSTMR.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap LinkedFolderOpen_16x {
+            get {
+                object obj = ResourceManager.GetObject("LinkedFolderOpen_16x", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap map_add {
             get {
                 object obj = ResourceManager.GetObject("map_add", resourceCulture);
