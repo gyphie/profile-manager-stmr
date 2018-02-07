@@ -118,14 +118,15 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			return foundMods;
 		}
 
-		private static string FindModPath(DirectoryInfo mainDirectory)
+		public static string FindModPath(DirectoryInfo mainDirectory)
 		{
 			if (Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "levels")) ||
 				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "classes")) ||
 				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "meshes")) ||
 				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "textures")) ||
 				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "billboards")) ||
-				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "vehicles"))
+				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "_m")) ||
+				Directory.Exists(AppLogic.PathCombine(mainDirectory.FullName, "_t"))
 			)
 			{
 				return mainDirectory.Name;
@@ -141,7 +142,7 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			return null;
 		}
 
-		private static ModType DetectType(string modPath, out bool multiplayer)
+		public static ModType DetectType(string modPath, out bool multiplayer)
 		{
 			multiplayer = false;
 			if (Directory.Exists(AppLogic.PathCombine(modPath, "levels")))
@@ -154,7 +155,8 @@ namespace net.glympz.ProfileManagerSTMR.Business
 				return ModType.Map;
 			}
 
-			if (Directory.Exists(AppLogic.PathCombine(modPath, "vehicles")))
+			if (Directory.Exists(AppLogic.PathCombine(modPath, "classes", "trucks")) ||
+				Directory.Exists(AppLogic.PathCombine(modPath, "classes", "wheels")))
 			{
 				return ModType.Vehicle;
 			}

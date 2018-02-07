@@ -70,7 +70,7 @@ namespace net.glympz.ProfileManagerSTMR
 
 		private void btnDelete_Click(object sender, EventArgs e)
 		{
-			if (DialogResult.OK != MessageBox.Show("Deleting this mod will delete this mod folder from disk.", "Delete mod", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
+			if (DialogResult.OK != MessageBox.Show("Uninstalling this mod will delete this mod folder from disk.", "Uninstall mod", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
 			{
 				return;
 			}

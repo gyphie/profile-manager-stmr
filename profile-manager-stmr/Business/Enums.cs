@@ -45,6 +45,10 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			{
 				return ModType.Vehicle;
 			}
+			else if (modType == "Autodetect")
+			{
+				return ModType.Unknown;
+			}
 			else
 			{
 				return ModType.Other;

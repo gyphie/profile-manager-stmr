@@ -29,8 +29,9 @@ namespace net.glympz.ProfileManagerSTMR
 			this.ShowDialog();
 		}
 
-		public void HideWorking()
+		public void HideWorking(int minMillisecondsDisplayed = 3000)
 		{
+
 			var timeElapsed = TimeSpan.MinValue;
 			do
 			{
@@ -38,7 +39,7 @@ namespace net.glympz.ProfileManagerSTMR
 				Application.DoEvents();
 				Thread.Sleep(10);
 			}
-			while (timeElapsed.TotalMilliseconds < 3000);
+			while (timeElapsed.TotalMilliseconds < minMillisecondsDisplayed);
 
 			this.Close();
 		}

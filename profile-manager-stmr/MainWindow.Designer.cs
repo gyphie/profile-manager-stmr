@@ -29,7 +29,7 @@ namespace spintires_mudrunner_profile_manager
 		private void InitializeComponent()
 		{
 			this.lvProfiles = new System.Windows.Forms.ListView();
-			this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.chProfileActive = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.btnAddProfile = new System.Windows.Forms.Button();
 			this.txtProfileName = new System.Windows.Forms.TextBox();
 			this.panDetail = new System.Windows.Forms.Panel();
@@ -46,18 +46,19 @@ namespace spintires_mudrunner_profile_manager
 			this.btnDelete = new System.Windows.Forms.Button();
 			this.bgwSwitchProfile = new System.ComponentModel.BackgroundWorker();
 			this.btnSettings = new System.Windows.Forms.Button();
+			this.chProfileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.panDetail.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// lvProfiles
 			// 
-			this.lvProfiles.Activation = System.Windows.Forms.ItemActivation.OneClick;
 			this.lvProfiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
 			this.lvProfiles.BackColor = System.Drawing.SystemColors.Window;
 			this.lvProfiles.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.lvProfiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader2});
+            this.chProfileActive,
+            this.chProfileName});
 			this.lvProfiles.ForeColor = System.Drawing.SystemColors.WindowText;
 			this.lvProfiles.FullRowSelect = true;
 			this.lvProfiles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
@@ -68,15 +69,16 @@ namespace spintires_mudrunner_profile_manager
 			this.lvProfiles.MultiSelect = false;
 			this.lvProfiles.Name = "lvProfiles";
 			this.lvProfiles.ShowGroups = false;
-			this.lvProfiles.Size = new System.Drawing.Size(250, 343);
+			this.lvProfiles.Size = new System.Drawing.Size(250, 501);
 			this.lvProfiles.TabIndex = 0;
 			this.lvProfiles.TileSize = new System.Drawing.Size(230, 46);
 			this.lvProfiles.UseCompatibleStateImageBehavior = false;
 			this.lvProfiles.View = System.Windows.Forms.View.Details;
 			// 
-			// columnHeader2
+			// chProfileActive
 			// 
-			this.columnHeader2.Width = 230;
+			this.chProfileActive.Text = "Active";
+			this.chProfileActive.Width = 15;
 			// 
 			// btnAddProfile
 			// 
@@ -85,7 +87,7 @@ namespace spintires_mudrunner_profile_manager
 			this.btnAddProfile.FlatAppearance.BorderSize = 0;
 			this.btnAddProfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnAddProfile.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnAddProfile.Location = new System.Drawing.Point(13, 359);
+			this.btnAddProfile.Location = new System.Drawing.Point(13, 517);
 			this.btnAddProfile.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.btnAddProfile.Name = "btnAddProfile";
 			this.btnAddProfile.Size = new System.Drawing.Size(147, 40);
@@ -102,7 +104,7 @@ namespace spintires_mudrunner_profile_manager
 			this.txtProfileName.Location = new System.Drawing.Point(14, 41);
 			this.txtProfileName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.txtProfileName.Name = "txtProfileName";
-			this.txtProfileName.Size = new System.Drawing.Size(484, 29);
+			this.txtProfileName.Size = new System.Drawing.Size(513, 29);
 			this.txtProfileName.TabIndex = 3;
 			this.txtProfileName.TextChanged += new System.EventHandler(this.txtProfileName_TextChanged);
 			// 
@@ -118,7 +120,7 @@ namespace spintires_mudrunner_profile_manager
 			this.panDetail.Controls.Add(this.txtProfileName);
 			this.panDetail.Location = new System.Drawing.Point(250, 0);
 			this.panDetail.Name = "panDetail";
-			this.panDetail.Size = new System.Drawing.Size(534, 343);
+			this.panDetail.Size = new System.Drawing.Size(563, 501);
 			this.panDetail.TabIndex = 5;
 			// 
 			// lvMods
@@ -141,7 +143,7 @@ namespace spintires_mudrunner_profile_manager
 			this.lvMods.MultiSelect = false;
 			this.lvMods.Name = "lvMods";
 			this.lvMods.ShowGroups = false;
-			this.lvMods.Size = new System.Drawing.Size(520, 250);
+			this.lvMods.Size = new System.Drawing.Size(549, 411);
 			this.lvMods.TabIndex = 10;
 			this.lvMods.UseCompatibleStateImageBehavior = false;
 			this.lvMods.View = System.Windows.Forms.View.Details;
@@ -189,7 +191,7 @@ namespace spintires_mudrunner_profile_manager
 			this.btnAddMod.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnAddMod.FlatAppearance.BorderSize = 0;
 			this.btnAddMod.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnAddMod.Location = new System.Drawing.Point(334, 359);
+			this.btnAddMod.Location = new System.Drawing.Point(334, 517);
 			this.btnAddMod.Name = "btnAddMod";
 			this.btnAddMod.Size = new System.Drawing.Size(100, 40);
 			this.btnAddMod.TabIndex = 14;
@@ -205,7 +207,7 @@ namespace spintires_mudrunner_profile_manager
 			this.btnSwitch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnSwitch.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnSwitch.ForeColor = System.Drawing.SystemColors.WindowText;
-			this.btnSwitch.Location = new System.Drawing.Point(689, 360);
+			this.btnSwitch.Location = new System.Drawing.Point(718, 518);
 			this.btnSwitch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.btnSwitch.Name = "btnSwitch";
 			this.btnSwitch.Size = new System.Drawing.Size(82, 39);
@@ -222,7 +224,7 @@ namespace spintires_mudrunner_profile_manager
 			this.btnLaunch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnLaunch.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnLaunch.ForeColor = System.Drawing.SystemColors.WindowText;
-			this.btnLaunch.Location = new System.Drawing.Point(540, 360);
+			this.btnLaunch.Location = new System.Drawing.Point(569, 518);
 			this.btnLaunch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.btnLaunch.Name = "btnLaunch";
 			this.btnLaunch.Size = new System.Drawing.Size(141, 39);
@@ -239,7 +241,7 @@ namespace spintires_mudrunner_profile_manager
 			this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnDelete.ForeColor = System.Drawing.SystemColors.WindowText;
-			this.btnDelete.Location = new System.Drawing.Point(167, 359);
+			this.btnDelete.Location = new System.Drawing.Point(167, 517);
 			this.btnDelete.Name = "btnDelete";
 			this.btnDelete.Size = new System.Drawing.Size(70, 40);
 			this.btnDelete.TabIndex = 8;
@@ -254,7 +256,7 @@ namespace spintires_mudrunner_profile_manager
 			this.btnSettings.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnSettings.FlatAppearance.BorderSize = 0;
 			this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnSettings.Location = new System.Drawing.Point(251, 359);
+			this.btnSettings.Location = new System.Drawing.Point(251, 517);
 			this.btnSettings.Name = "btnSettings";
 			this.btnSettings.Size = new System.Drawing.Size(77, 40);
 			this.btnSettings.TabIndex = 13;
@@ -262,11 +264,16 @@ namespace spintires_mudrunner_profile_manager
 			this.btnSettings.UseVisualStyleBackColor = false;
 			this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
 			// 
+			// chProfileName
+			// 
+			this.chProfileName.Text = "Name";
+			this.chProfileName.Width = 215;
+			// 
 			// frmMainWindow
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.ClientSize = new System.Drawing.Size(784, 411);
+			this.ClientSize = new System.Drawing.Size(813, 569);
 			this.Controls.Add(this.btnAddMod);
 			this.Controls.Add(this.btnSettings);
 			this.Controls.Add(this.panDetail);
@@ -304,12 +311,13 @@ namespace spintires_mudrunner_profile_manager
 		private System.Windows.Forms.ListView lvMods;
 		private System.Windows.Forms.ColumnHeader chModName;
 		private System.Windows.Forms.Button btnAddMod;
-		private System.Windows.Forms.ColumnHeader columnHeader2;
+		private System.Windows.Forms.ColumnHeader chProfileActive;
 		private System.Windows.Forms.Label lblProfileName;
 		private System.Windows.Forms.ColumnHeader chType;
 		private System.Windows.Forms.ColumnHeader chRating;
 		private System.Windows.Forms.ColumnHeader chMultiplayer;
 		private System.Windows.Forms.ColumnHeader chInstallationDate;
+		private System.Windows.Forms.ColumnHeader chProfileName;
 	}
 }
 
