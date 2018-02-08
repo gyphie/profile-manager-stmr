@@ -18,7 +18,6 @@ using Microsoft.Win32;
 using net.glympz.ProfileManagerSTMR;
 using net.glympz.ProfileManagerSTMR.Business;
 using net.glympz.ProfileManagerSTMR.Properties;
-using SharpCompress.Readers;
 
 namespace spintires_mudrunner_profile_manager
 {
@@ -90,8 +89,7 @@ namespace spintires_mudrunner_profile_manager
 
 		private void GetInitialAppState()
 		{
-			string messages = "";
-			bool showSettingsDialog = AppLogic.GetInitialSettings(this.appSettings, out messages);
+			bool showSettingsDialog = AppLogic.GetInitialSettings(this.appSettings, out string messages);
 
 			if (showSettingsDialog)
 			{
@@ -601,8 +599,7 @@ namespace spintires_mudrunner_profile_manager
 			var result = this.installModDialog.ShowForm(this, this.appSettings.ModFolder);
 			if (result == DialogResult.OK)
 			{
-				var mod = this.installModDialog.Tag as Mod;
-				if (mod != null)
+				if (this.installModDialog.Tag is Mod mod)
 				{
 					this.mods.Add(mod);
 					this.WriteMods(this.mods);

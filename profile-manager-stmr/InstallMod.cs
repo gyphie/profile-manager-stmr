@@ -1,17 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using net.glympz.ProfileManagerSTMR.Business;
 using net.glympz.ProfileManagerSTMR.Properties;
-using SharpCompress.Archives;
-using SharpCompress.Readers;
+using SevenZipExtractor;
 using Syroot.Windows.IO;
 
 namespace net.glympz.ProfileManagerSTMR
@@ -92,26 +88,21 @@ namespace net.glympz.ProfileManagerSTMR
 
 		private void DecompressArchive(string archivePath, string targetPath)
 		{
-			var options = new ExtractionOptions()
+			using (ArchiveFile archive = new ArchiveFile(archivePath))
 			{
-				Overwrite = false,
-				PreserveFileTime = true,
-				ExtractFullPath = true
-			};
+				var entries = archive.Entries.Where(a => !a.FileName.ToLower().EndsWith("thumbs.db"));	// Exclude windows thumbs.db files
 
-			using (IArchive archive = SharpCompress.Archives.ArchiveFactory.Open(archivePath))
-			{
-				long totalEntries = archive.Entries.LongCount();
+				long totalEntries = entries.LongCount();
 				long entryCount = 0;
-				foreach (IArchiveEntry entry in archive.Entries)
+				foreach (var entry in entries)
 				{
-					entryCount++;
-					entry.WriteToDirectory(targetPath, options);
-					this.bgwInstaller.ReportProgress((int)((float)entryCount / (float)totalEntries * 100));
+					entry.Extract(AppLogic.PathCombine(targetPath, entry.FileName));
+
+					this.bgwInstaller.ReportProgress((int)((float)++entryCount / (float)totalEntries * 100));
 				}
 			}
 		}
-
+		
 		private void bgwInstaller_DoWork(object sender, DoWorkEventArgs e)
 		{
 			WorkerData workerData = e.Argument as WorkerData;
