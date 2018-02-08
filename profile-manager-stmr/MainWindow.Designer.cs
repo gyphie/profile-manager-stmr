@@ -28,8 +28,14 @@ namespace spintires_mudrunner_profile_manager
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.lvProfiles = new System.Windows.Forms.ListView();
 			this.chProfileActive = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.chProfileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.cmsProfile = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.miProfileSwitchAndLaunch = new System.Windows.Forms.ToolStripMenuItem();
+			this.miProfileSwitch = new System.Windows.Forms.ToolStripMenuItem();
+			this.miProfileDelete = new System.Windows.Forms.ToolStripMenuItem();
 			this.btnAddProfile = new System.Windows.Forms.Button();
 			this.txtProfileName = new System.Windows.Forms.TextBox();
 			this.panDetail = new System.Windows.Forms.Panel();
@@ -39,6 +45,10 @@ namespace spintires_mudrunner_profile_manager
 			this.chType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.chRating = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.chMultiplayer = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.cmsMod = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.miModEnabled = new System.Windows.Forms.ToolStripMenuItem();
+			this.miModEdit = new System.Windows.Forms.ToolStripMenuItem();
+			this.miModUninstall = new System.Windows.Forms.ToolStripMenuItem();
 			this.lblProfileName = new System.Windows.Forms.Label();
 			this.btnAddMod = new System.Windows.Forms.Button();
 			this.btnSwitch = new System.Windows.Forms.Button();
@@ -46,8 +56,9 @@ namespace spintires_mudrunner_profile_manager
 			this.btnDelete = new System.Windows.Forms.Button();
 			this.bgwSwitchProfile = new System.ComponentModel.BackgroundWorker();
 			this.btnSettings = new System.Windows.Forms.Button();
-			this.chProfileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.cmsProfile.SuspendLayout();
 			this.panDetail.SuspendLayout();
+			this.cmsMod.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// lvProfiles
@@ -59,6 +70,7 @@ namespace spintires_mudrunner_profile_manager
 			this.lvProfiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chProfileActive,
             this.chProfileName});
+			this.lvProfiles.ContextMenuStrip = this.cmsProfile;
 			this.lvProfiles.ForeColor = System.Drawing.SystemColors.WindowText;
 			this.lvProfiles.FullRowSelect = true;
 			this.lvProfiles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
@@ -79,6 +91,44 @@ namespace spintires_mudrunner_profile_manager
 			// 
 			this.chProfileActive.Text = "Active";
 			this.chProfileActive.Width = 15;
+			// 
+			// chProfileName
+			// 
+			this.chProfileName.Text = "Name";
+			this.chProfileName.Width = 215;
+			// 
+			// cmsProfile
+			// 
+			this.cmsProfile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miProfileSwitchAndLaunch,
+            this.miProfileSwitch,
+            this.miProfileDelete});
+			this.cmsProfile.Name = "cmsProfile";
+			this.cmsProfile.ShowCheckMargin = true;
+			this.cmsProfile.ShowImageMargin = false;
+			this.cmsProfile.Size = new System.Drawing.Size(210, 92);
+			this.cmsProfile.Opening += new System.ComponentModel.CancelEventHandler(this.cmsProfile_Opening);
+			// 
+			// miProfileSwitchAndLaunch
+			// 
+			this.miProfileSwitchAndLaunch.Name = "miProfileSwitchAndLaunch";
+			this.miProfileSwitchAndLaunch.Size = new System.Drawing.Size(184, 22);
+			this.miProfileSwitchAndLaunch.Text = "Switch to $$$  and launch";
+			this.miProfileSwitchAndLaunch.Click += new System.EventHandler(this.miProfileSwitchAndLaunch_Click);
+			// 
+			// miProfileSwitch
+			// 
+			this.miProfileSwitch.Name = "miProfileSwitch";
+			this.miProfileSwitch.Size = new System.Drawing.Size(184, 22);
+			this.miProfileSwitch.Text = "Switch to $$$";
+			this.miProfileSwitch.Click += new System.EventHandler(this.miProfileSwitch_Click);
+			// 
+			// miProfileDelete
+			// 
+			this.miProfileDelete.Name = "miProfileDelete";
+			this.miProfileDelete.Size = new System.Drawing.Size(184, 22);
+			this.miProfileDelete.Text = "Delete $$$";
+			this.miProfileDelete.Click += new System.EventHandler(this.miProfileDelete_Click);
 			// 
 			// btnAddProfile
 			// 
@@ -136,6 +186,7 @@ namespace spintires_mudrunner_profile_manager
             this.chType,
             this.chRating,
             this.chMultiplayer});
+			this.lvMods.ContextMenuStrip = this.cmsMod;
 			this.lvMods.FullRowSelect = true;
 			this.lvMods.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.lvMods.LabelWrap = false;
@@ -172,6 +223,39 @@ namespace spintires_mudrunner_profile_manager
 			// chMultiplayer
 			// 
 			this.chMultiplayer.Text = "MP";
+			// 
+			// cmsMod
+			// 
+			this.cmsMod.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miModEnabled,
+            this.miModEdit,
+            this.miModUninstall});
+			this.cmsMod.Name = "cmsMod";
+			this.cmsMod.ShowCheckMargin = true;
+			this.cmsMod.ShowImageMargin = false;
+			this.cmsMod.Size = new System.Drawing.Size(121, 70);
+			this.cmsMod.Opening += new System.ComponentModel.CancelEventHandler(this.cmsMod_Opening);
+			// 
+			// miModEnabled
+			// 
+			this.miModEnabled.Name = "miModEnabled";
+			this.miModEnabled.Size = new System.Drawing.Size(120, 22);
+			this.miModEnabled.Text = "Enabled";
+			this.miModEnabled.Click += new System.EventHandler(this.miModEnabled_Click);
+			// 
+			// miModEdit
+			// 
+			this.miModEdit.Name = "miModEdit";
+			this.miModEdit.Size = new System.Drawing.Size(120, 22);
+			this.miModEdit.Text = "Edit";
+			this.miModEdit.Click += new System.EventHandler(this.miModEdit_Click);
+			// 
+			// miModUninstall
+			// 
+			this.miModUninstall.Name = "miModUninstall";
+			this.miModUninstall.Size = new System.Drawing.Size(120, 22);
+			this.miModUninstall.Text = "Uninstall";
+			this.miModUninstall.Click += new System.EventHandler(this.miModUninstall_Click);
 			// 
 			// lblProfileName
 			// 
@@ -224,12 +308,12 @@ namespace spintires_mudrunner_profile_manager
 			this.btnLaunch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnLaunch.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnLaunch.ForeColor = System.Drawing.SystemColors.WindowText;
-			this.btnLaunch.Location = new System.Drawing.Point(569, 518);
+			this.btnLaunch.Location = new System.Drawing.Point(540, 518);
 			this.btnLaunch.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.btnLaunch.Name = "btnLaunch";
-			this.btnLaunch.Size = new System.Drawing.Size(141, 39);
+			this.btnLaunch.Size = new System.Drawing.Size(170, 39);
 			this.btnLaunch.TabIndex = 1;
-			this.btnLaunch.Text = "Switch && &launch";
+			this.btnLaunch.Text = "Switch && Start &Game";
 			this.btnLaunch.UseVisualStyleBackColor = false;
 			this.btnLaunch.Click += new System.EventHandler(this.btnLaunch_Click);
 			// 
@@ -264,11 +348,6 @@ namespace spintires_mudrunner_profile_manager
 			this.btnSettings.UseVisualStyleBackColor = false;
 			this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
 			// 
-			// chProfileName
-			// 
-			this.chProfileName.Text = "Name";
-			this.chProfileName.Width = 215;
-			// 
 			// frmMainWindow
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -291,8 +370,10 @@ namespace spintires_mudrunner_profile_manager
 			this.Load += new System.EventHandler(this.frmMainWindow_Load);
 			this.Shown += new System.EventHandler(this.frmMainWindow_Shown);
 			this.Resize += new System.EventHandler(this.frmMainWindow_Resize);
+			this.cmsProfile.ResumeLayout(false);
 			this.panDetail.ResumeLayout(false);
 			this.panDetail.PerformLayout();
+			this.cmsMod.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -318,6 +399,14 @@ namespace spintires_mudrunner_profile_manager
 		private System.Windows.Forms.ColumnHeader chMultiplayer;
 		private System.Windows.Forms.ColumnHeader chInstallationDate;
 		private System.Windows.Forms.ColumnHeader chProfileName;
+		private System.Windows.Forms.ContextMenuStrip cmsMod;
+		private System.Windows.Forms.ToolStripMenuItem miModEnabled;
+		private System.Windows.Forms.ToolStripMenuItem miModEdit;
+		private System.Windows.Forms.ContextMenuStrip cmsProfile;
+		private System.Windows.Forms.ToolStripMenuItem miProfileSwitchAndLaunch;
+		private System.Windows.Forms.ToolStripMenuItem miProfileDelete;
+		private System.Windows.Forms.ToolStripMenuItem miProfileSwitch;
+		private System.Windows.Forms.ToolStripMenuItem miModUninstall;
 	}
 }
 

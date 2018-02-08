@@ -618,22 +618,27 @@ namespace spintires_mudrunner_profile_manager
 			{
 				if ((this.modDetailDialog.Tag as string) == "delete")
 				{
-					if (Mod.DeleteMod(this.appSettings.ModFolder, mod))
-					{
-						this.mods.Remove(mod);
-					}
-					else
-					{
-						MessageBox.Show("The mod could not be deleted.");
-					}
+					this.DeleteMod(mod);
 				}
 				// else the mod object was updated by the form and is ready to be saved
 
 				this.WriteMods(this.mods);
 
-				//this.inhibitModAutoCheck = false;	// The double click check prevention also prevents us setting the check state programmatically, so clear the inhibit flag
 				this.LoadAppData();
 			}
+		}
+
+		private void DeleteMod(Mod mod)
+		{
+			if (Mod.DeleteMod(this.appSettings.ModFolder, mod))
+			{
+				this.mods.Remove(mod);
+			}
+			else
+			{
+				MessageBox.Show("The mod could not be deleted.");
+			}
+
 		}
 
 		// Technique from https://stackoverflow.com/questions/1406887/only-change-a-listviewitems-checked-state-if-the-checkbox-is-clicked
@@ -656,5 +661,80 @@ namespace spintires_mudrunner_profile_manager
 			}
 		}
 
+		private void cmsMod_Opening(object sender, CancelEventArgs e)
+		{
+			if (this.lvMods.SelectedItems.Count == 0)
+			{
+				e.Cancel = true;
+				return;
+			}
+
+			this.miModEnabled.Checked = this.lvMods.SelectedItems[0].Checked;
+		}
+
+		private void miModEnabled_Click(object sender, EventArgs e)
+		{
+			if (this.lvMods.SelectedItems.Count > 0)
+			{
+				this.lvMods.SelectedItems[0].Checked = !this.lvMods.SelectedItems[0].Checked;
+			}
+		}
+
+		private void miModEdit_Click(object sender, EventArgs e)
+		{
+			if (this.lvMods.SelectedItems.Count > 0)
+			{
+				this.lvMods_DoubleClick(this.lvMods.SelectedItems[0], new EventArgs());
+			}
+		}
+
+		private void cmsProfile_Opening(object sender, CancelEventArgs e)
+		{
+			if (this.lvProfiles.SelectedItems.Count == 0)
+			{
+				e.Cancel = true;
+				return;
+			}
+
+			this.miProfileSwitch.Text = $"Switch to {this.SelectedProfile.Name}";
+			this.miProfileSwitchAndLaunch.Text = $"Start game with {this.SelectedProfile.Name}";
+			this.miProfileDelete.Text = $"Delete {this.SelectedProfile.Name}";
+		}
+
+		private void miProfileSwitchAndLaunch_Click(object sender, EventArgs e)
+		{
+			if (this.lvProfiles.SelectedItems.Count > 0)
+			{
+				this.btnLaunch_Click(this.btnLaunch, new EventArgs());
+			}
+		}
+
+		private void miProfileSwitch_Click(object sender, EventArgs e)
+		{
+			if (this.lvProfiles.SelectedItems.Count > 0)
+			{
+				this.btnSwitch_Click(this.btnSwitch, new EventArgs());
+			}
+		}
+
+		private void miProfileDelete_Click(object sender, EventArgs e)
+		{
+			if (this.lvProfiles.SelectedItems.Count > 0)
+			{
+				this.btnDelete_Click(this.btnDelete, new EventArgs());
+			}
+		}
+
+		private void miModUninstall_Click(object sender, EventArgs e)
+		{
+			if (this.lvMods.SelectedItems.Count > 0)
+			{
+				var mod = this.mods[this.lvMods.SelectedIndices[0]];
+				if (DialogResult.OK == MessageBox.Show("Uninstalling this mod will delete this mod folder from disk.", $"Uninstall {mod.Name}", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
+				{
+					this.DeleteMod(mod);
+				}
+			}
+		}
 	}
 }
