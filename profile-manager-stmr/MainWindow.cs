@@ -107,6 +107,7 @@ namespace spintires_mudrunner_profile_manager
 		private void LoadAppData()
 		{
 			int previouslySelectedProfileIndex = this.SelectedProfileIndex;
+			int modTopItemIndex = this.lvMods.TopItem?.Index ?? -1;
 
 			// Reset the controls and their data
 			this.lvMods.ItemChecked -= lvMods_ItemChecked; // Manually assign this event handler after we've populated the item list to prevent it triggering unnecessarily.
@@ -139,7 +140,12 @@ namespace spintires_mudrunner_profile_manager
 						Enums.RatingToEmoji(mod.Rating),
 						mod.Multiplayer ? "X" : ""
 					});
+			}
 
+			// Attempt to restore the scroll position of the mod list
+			if (modTopItemIndex >= 0 && modTopItemIndex < this.lvMods.Items.Count)
+			{
+				this.lvMods.TopItem = this.lvMods.Items[modTopItemIndex];
 			}
 
 			string activeProfileGuid = this.ReadCurrentProfileGuid();
@@ -415,11 +421,12 @@ namespace spintires_mudrunner_profile_manager
 		private void bgwSwitchProfile_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			var workerData = e.Result as WorkerData;
-			this.workingDialog.HideWorking(minMillisecondsDisplayed: 2000);
+			this.workingDialog.HideWorking();
 
 			if (e.Error != null)
 			{
-
+				MessageBox.Show("There was an error while switching profiles.", "Error switching profiles");
+				return;
 			}
 
 			this.activeProfileIndex = this.profiles.FindIndex(a => a.Guid == workerData.Profile.Guid);
@@ -733,6 +740,8 @@ namespace spintires_mudrunner_profile_manager
 				if (DialogResult.OK == MessageBox.Show("Uninstalling this mod will delete this mod folder from disk.", $"Uninstall {mod.Name}", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
 				{
 					this.DeleteMod(mod);
+					this.WriteMods(this.mods);
+					this.LoadAppData();
 				}
 			}
 		}

@@ -31,7 +31,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.bgwInstaller = new System.ComponentModel.BackgroundWorker();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnInstall = new System.Windows.Forms.Button();
-			this.btnSteamFolderPicker = new System.Windows.Forms.Button();
+			this.btnModArchivePicker = new System.Windows.Forms.Button();
 			this.lblSteamFolder = new System.Windows.Forms.Label();
 			this.txtModFilePath = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
@@ -44,7 +44,9 @@ namespace net.glympz.ProfileManagerSTMR
 			// 
 			// bgwInstaller
 			// 
+			this.bgwInstaller.WorkerReportsProgress = true;
 			this.bgwInstaller.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwInstaller_DoWork);
+			this.bgwInstaller.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bgwInstaller_ProgressChanged);
 			this.bgwInstaller.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwInstaller_RunWorkerCompleted);
 			// 
 			// btnCancel
@@ -82,21 +84,21 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnInstall.UseVisualStyleBackColor = false;
 			this.btnInstall.Click += new System.EventHandler(this.btnInstall_Click);
 			// 
-			// btnSteamFolderPicker
+			// btnModArchivePicker
 			// 
-			this.btnSteamFolderPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnSteamFolderPicker.BackColor = System.Drawing.Color.Transparent;
-			this.btnSteamFolderPicker.BackgroundImage = global::net.glympz.ProfileManagerSTMR.Properties.Resources.Folder_16x;
-			this.btnSteamFolderPicker.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-			this.btnSteamFolderPicker.FlatAppearance.BorderSize = 0;
-			this.btnSteamFolderPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnSteamFolderPicker.Location = new System.Drawing.Point(543, 37);
-			this.btnSteamFolderPicker.Name = "btnSteamFolderPicker";
-			this.btnSteamFolderPicker.Size = new System.Drawing.Size(28, 28);
-			this.btnSteamFolderPicker.TabIndex = 17;
-			this.btnSteamFolderPicker.UseMnemonic = false;
-			this.btnSteamFolderPicker.UseVisualStyleBackColor = false;
-			this.btnSteamFolderPicker.Click += new System.EventHandler(this.btnSteamFolderPicker_Click);
+			this.btnModArchivePicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnModArchivePicker.BackColor = System.Drawing.Color.Transparent;
+			this.btnModArchivePicker.BackgroundImage = global::net.glympz.ProfileManagerSTMR.Properties.Resources.Folder_16x;
+			this.btnModArchivePicker.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			this.btnModArchivePicker.FlatAppearance.BorderSize = 0;
+			this.btnModArchivePicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.btnModArchivePicker.Location = new System.Drawing.Point(543, 37);
+			this.btnModArchivePicker.Name = "btnModArchivePicker";
+			this.btnModArchivePicker.Size = new System.Drawing.Size(28, 28);
+			this.btnModArchivePicker.TabIndex = 17;
+			this.btnModArchivePicker.UseMnemonic = false;
+			this.btnModArchivePicker.UseVisualStyleBackColor = false;
+			this.btnModArchivePicker.Click += new System.EventHandler(this.btnModArchivePicker_Click);
 			// 
 			// lblSteamFolder
 			// 
@@ -120,7 +122,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.txtModFilePath.Name = "txtModFilePath";
 			this.txtModFilePath.Size = new System.Drawing.Size(519, 29);
 			this.txtModFilePath.TabIndex = 15;
-			this.txtModFilePath.Click += new System.EventHandler(this.btnSteamFolderPicker_Click);
+			this.txtModFilePath.Click += new System.EventHandler(this.btnModArchivePicker_Click);
 			// 
 			// label2
 			// 
@@ -204,7 +206,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.txtModName);
-			this.Controls.Add(this.btnSteamFolderPicker);
+			this.Controls.Add(this.btnModArchivePicker);
 			this.Controls.Add(this.lblSteamFolder);
 			this.Controls.Add(this.txtModFilePath);
 			this.Controls.Add(this.btnCancel);
@@ -228,7 +230,7 @@ namespace net.glympz.ProfileManagerSTMR
 		private System.ComponentModel.BackgroundWorker bgwInstaller;
 		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.Button btnInstall;
-		private System.Windows.Forms.Button btnSteamFolderPicker;
+		private System.Windows.Forms.Button btnModArchivePicker;
 		private System.Windows.Forms.Label lblSteamFolder;
 		private System.Windows.Forms.TextBox txtModFilePath;
 		private System.Windows.Forms.Label label2;

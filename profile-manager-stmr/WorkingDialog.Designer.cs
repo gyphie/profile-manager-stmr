@@ -28,8 +28,10 @@ namespace net.glympz.ProfileManagerSTMR
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.lblWorkingMessage = new System.Windows.Forms.Label();
 			this.progressBar = new System.Windows.Forms.ProgressBar();
+			this.timHide = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			// 
 			// lblWorkingMessage
@@ -40,7 +42,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.lblWorkingMessage.Font = new System.Drawing.Font("Segoe UI", 18F);
 			this.lblWorkingMessage.Location = new System.Drawing.Point(12, 9);
 			this.lblWorkingMessage.Name = "lblWorkingMessage";
-			this.lblWorkingMessage.Size = new System.Drawing.Size(305, 107);
+			this.lblWorkingMessage.Size = new System.Drawing.Size(293, 98);
 			this.lblWorkingMessage.TabIndex = 0;
 			this.lblWorkingMessage.Text = "Working...";
 			this.lblWorkingMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -51,20 +53,26 @@ namespace net.glympz.ProfileManagerSTMR
 			// 
 			this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.progressBar.Location = new System.Drawing.Point(12, 119);
+			this.progressBar.Location = new System.Drawing.Point(12, 110);
 			this.progressBar.Name = "progressBar";
-			this.progressBar.Size = new System.Drawing.Size(305, 23);
+			this.progressBar.Size = new System.Drawing.Size(293, 15);
+			this.progressBar.Step = 1;
 			this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
 			this.progressBar.TabIndex = 1;
+			this.progressBar.UseWaitCursor = true;
+			// 
+			// timHide
+			// 
+			this.timHide.Tick += new System.EventHandler(this.timHide_Tick);
 			// 
 			// frmWorkingDialog
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(329, 149);
+			this.ClientSize = new System.Drawing.Size(317, 137);
 			this.ControlBox = false;
 			this.Controls.Add(this.progressBar);
 			this.Controls.Add(this.lblWorkingMessage);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "frmWorkingDialog";
@@ -72,6 +80,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.ShowInTaskbar = false;
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.UseWaitCursor = true;
 			this.ResumeLayout(false);
 
 		}
@@ -80,5 +89,6 @@ namespace net.glympz.ProfileManagerSTMR
 
 		private System.Windows.Forms.Label lblWorkingMessage;
 		private System.Windows.Forms.ProgressBar progressBar;
+		private System.Windows.Forms.Timer timHide;
 	}
 }

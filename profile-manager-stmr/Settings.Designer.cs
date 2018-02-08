@@ -58,7 +58,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnCancel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnCancel.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.btnCancel.Location = new System.Drawing.Point(554, 209);
+			this.btnCancel.Location = new System.Drawing.Point(566, 209);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(82, 40);
 			this.btnCancel.TabIndex = 10;
@@ -74,7 +74,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.btnSave.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnSave.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.btnSave.Location = new System.Drawing.Point(470, 209);
+			this.btnSave.Location = new System.Drawing.Point(482, 209);
 			this.btnSave.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(77, 40);
@@ -102,7 +102,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.txtSteamFolder.Location = new System.Drawing.Point(206, 9);
 			this.txtSteamFolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.txtSteamFolder.Name = "txtSteamFolder";
-			this.txtSteamFolder.Size = new System.Drawing.Size(372, 29);
+			this.txtSteamFolder.Size = new System.Drawing.Size(373, 29);
 			this.txtSteamFolder.TabIndex = 11;
 			// 
 			// btnSteamFolderPicker
@@ -112,7 +112,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnSteamFolderPicker.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnSteamFolderPicker.FlatAppearance.BorderSize = 0;
 			this.btnSteamFolderPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnSteamFolderPicker.Location = new System.Drawing.Point(585, 10);
+			this.btnSteamFolderPicker.Location = new System.Drawing.Point(586, 10);
 			this.btnSteamFolderPicker.Name = "btnSteamFolderPicker";
 			this.btnSteamFolderPicker.Size = new System.Drawing.Size(28, 28);
 			this.btnSteamFolderPicker.TabIndex = 14;
@@ -127,7 +127,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.txtGameFolder.Location = new System.Drawing.Point(206, 49);
 			this.txtGameFolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.txtGameFolder.Name = "txtGameFolder";
-			this.txtGameFolder.Size = new System.Drawing.Size(372, 29);
+			this.txtGameFolder.Size = new System.Drawing.Size(373, 29);
 			this.txtGameFolder.TabIndex = 11;
 			// 
 			// lblGameFolder
@@ -148,7 +148,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnGameFolderPicker.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnGameFolderPicker.FlatAppearance.BorderSize = 0;
 			this.btnGameFolderPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnGameFolderPicker.Location = new System.Drawing.Point(585, 50);
+			this.btnGameFolderPicker.Location = new System.Drawing.Point(586, 50);
 			this.btnGameFolderPicker.Name = "btnGameFolderPicker";
 			this.btnGameFolderPicker.Size = new System.Drawing.Size(28, 28);
 			this.btnGameFolderPicker.TabIndex = 14;
@@ -163,7 +163,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.txtAppDataFolder.Location = new System.Drawing.Point(206, 89);
 			this.txtAppDataFolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.txtAppDataFolder.Name = "txtAppDataFolder";
-			this.txtAppDataFolder.Size = new System.Drawing.Size(372, 29);
+			this.txtAppDataFolder.Size = new System.Drawing.Size(373, 29);
 			this.txtAppDataFolder.TabIndex = 11;
 			// 
 			// lblAppDataFolder
@@ -184,7 +184,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnAppDataFolderPicker.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnAppDataFolderPicker.FlatAppearance.BorderSize = 0;
 			this.btnAppDataFolderPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnAppDataFolderPicker.Location = new System.Drawing.Point(585, 90);
+			this.btnAppDataFolderPicker.Location = new System.Drawing.Point(586, 90);
 			this.btnAppDataFolderPicker.Name = "btnAppDataFolderPicker";
 			this.btnAppDataFolderPicker.Size = new System.Drawing.Size(28, 28);
 			this.btnAppDataFolderPicker.TabIndex = 14;
@@ -199,7 +199,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.txtModsFolder.Location = new System.Drawing.Point(206, 131);
 			this.txtModsFolder.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.txtModsFolder.Name = "txtModsFolder";
-			this.txtModsFolder.Size = new System.Drawing.Size(372, 29);
+			this.txtModsFolder.Size = new System.Drawing.Size(373, 29);
 			this.txtModsFolder.TabIndex = 11;
 			// 
 			// lblModsFolder
@@ -220,7 +220,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnModsFolderPicker.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnModsFolderPicker.FlatAppearance.BorderSize = 0;
 			this.btnModsFolderPicker.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnModsFolderPicker.Location = new System.Drawing.Point(585, 132);
+			this.btnModsFolderPicker.Location = new System.Drawing.Point(586, 132);
 			this.btnModsFolderPicker.Name = "btnModsFolderPicker";
 			this.btnModsFolderPicker.Size = new System.Drawing.Size(28, 28);
 			this.btnModsFolderPicker.TabIndex = 14;
@@ -234,7 +234,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnOpenFolderSteam.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnOpenFolderSteam.FlatAppearance.BorderSize = 0;
 			this.btnOpenFolderSteam.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnOpenFolderSteam.Location = new System.Drawing.Point(619, 10);
+			this.btnOpenFolderSteam.Location = new System.Drawing.Point(620, 10);
 			this.btnOpenFolderSteam.Name = "btnOpenFolderSteam";
 			this.btnOpenFolderSteam.Size = new System.Drawing.Size(28, 28);
 			this.btnOpenFolderSteam.TabIndex = 15;
@@ -249,7 +249,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnOpenFolderGame.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnOpenFolderGame.FlatAppearance.BorderSize = 0;
 			this.btnOpenFolderGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnOpenFolderGame.Location = new System.Drawing.Point(619, 50);
+			this.btnOpenFolderGame.Location = new System.Drawing.Point(620, 50);
 			this.btnOpenFolderGame.Name = "btnOpenFolderGame";
 			this.btnOpenFolderGame.Size = new System.Drawing.Size(28, 28);
 			this.btnOpenFolderGame.TabIndex = 15;
@@ -264,7 +264,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnOpenFolderAppData.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnOpenFolderAppData.FlatAppearance.BorderSize = 0;
 			this.btnOpenFolderAppData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnOpenFolderAppData.Location = new System.Drawing.Point(619, 90);
+			this.btnOpenFolderAppData.Location = new System.Drawing.Point(620, 90);
 			this.btnOpenFolderAppData.Name = "btnOpenFolderAppData";
 			this.btnOpenFolderAppData.Size = new System.Drawing.Size(28, 28);
 			this.btnOpenFolderAppData.TabIndex = 15;
@@ -279,7 +279,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnOpenFolderMods.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
 			this.btnOpenFolderMods.FlatAppearance.BorderSize = 0;
 			this.btnOpenFolderMods.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnOpenFolderMods.Location = new System.Drawing.Point(619, 132);
+			this.btnOpenFolderMods.Location = new System.Drawing.Point(620, 132);
 			this.btnOpenFolderMods.Name = "btnOpenFolderMods";
 			this.btnOpenFolderMods.Size = new System.Drawing.Size(28, 28);
 			this.btnOpenFolderMods.TabIndex = 15;
@@ -287,12 +287,12 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnOpenFolderMods.UseVisualStyleBackColor = true;
 			this.btnOpenFolderMods.Click += new System.EventHandler(this.btnOpenFolderX_Click);
 			// 
-			// frmSettingsDialog
+			// frmSettings
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(648, 261);
+			this.ClientSize = new System.Drawing.Size(660, 261);
 			this.Controls.Add(this.btnOpenFolderMods);
 			this.Controls.Add(this.btnOpenFolderAppData);
 			this.Controls.Add(this.btnOpenFolderGame);
@@ -315,7 +315,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.MinimumSize = new System.Drawing.Size(500, 300);
-			this.Name = "frmSettingsDialog";
+			this.Name = "frmSettings";
 			this.ShowIcon = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Settings";

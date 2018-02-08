@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using net.glympz.ProfileManagerSTMR.Business;
 using net.glympz.ProfileManagerSTMR.Properties;
+using SharpCompress.Archives;
 using SharpCompress.Readers;
 using Syroot.Windows.IO;
 
@@ -43,6 +44,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.cmboModType.SelectedIndex = 0;
 			this.cmboRating.SelectedIndex = 1;
 			this.SetupFilePicker();
+			this.btnModArchivePicker_Click(this.btnModArchivePicker, new EventArgs());
 		}
 
 		private void SetupFilePicker()
@@ -65,7 +67,7 @@ namespace net.glympz.ProfileManagerSTMR
 
 		}
 
-		private void btnSteamFolderPicker_Click(object sender, EventArgs e)
+		private void btnModArchivePicker_Click(object sender, EventArgs e)
 		{
 			string previousModFileName = Path.GetFileNameWithoutExtension(this.txtModFilePath.Text);
 
@@ -90,15 +92,24 @@ namespace net.glympz.ProfileManagerSTMR
 
 		private void DecompressArchive(string archivePath, string targetPath)
 		{
-			SharpCompress.Archives.ArchiveFactory.WriteToDirectory(
-				archivePath,
-				targetPath,
-				new ExtractionOptions() {
-					Overwrite = false,
-					PreserveFileTime = true,
-					ExtractFullPath = true
+			var options = new ExtractionOptions()
+			{
+				Overwrite = false,
+				PreserveFileTime = true,
+				ExtractFullPath = true
+			};
+
+			using (IArchive archive = SharpCompress.Archives.ArchiveFactory.Open(archivePath))
+			{
+				long totalEntries = archive.Entries.LongCount();
+				long entryCount = 0;
+				foreach (IArchiveEntry entry in archive.Entries)
+				{
+					entryCount++;
+					entry.WriteToDirectory(targetPath, options);
+					this.bgwInstaller.ReportProgress((int)((float)entryCount / (float)totalEntries * 100));
 				}
-			);
+			}
 		}
 
 		private void bgwInstaller_DoWork(object sender, DoWorkEventArgs e)
@@ -140,6 +151,10 @@ namespace net.glympz.ProfileManagerSTMR
 				if (innerException is UnauthorizedAccessException)
 				{
 					MessageBox.Show("The mod could not be installed. You may need to run as administrator.", "Access denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				}
+				else if (innerException is InvalidOperationException && innerException.Message.StartsWith("Cannot determine compressed stream type."))
+				{
+					MessageBox.Show("The mod could not be installed because files compression type is not supported. You should try using 7zip or WinRar may be required.", "Unsupported file type", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				}
 				else
 				{
@@ -212,10 +227,8 @@ namespace net.glympz.ProfileManagerSTMR
 				RootPath = modFolder
 			};
 
-
-			this.Enabled = false;
 			this.bgwInstaller.RunWorkerAsync(new WorkerData { ArchivePath = this.txtModFilePath.Text, Mod = mod, GameModPath = this.modFolderPath });
-			this.workingDialog.ShowWorking("Installing mod...");
+			this.workingDialog.ShowWorking("Installing mod...", hasProgress: true);
 		}
 
 		private class WorkerData
@@ -232,6 +245,11 @@ namespace net.glympz.ProfileManagerSTMR
 			{
 				this.WorkerData = workerData;
 			}
+		}
+
+		private void bgwInstaller_ProgressChanged(object sender, ProgressChangedEventArgs e)
+		{
+			this.workingDialog.SetProgress(e.ProgressPercentage);
 		}
 	}
 }
