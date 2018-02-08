@@ -83,6 +83,8 @@ namespace spintires_mudrunner_profile_manager
 		{
 			this.GetInitialAppState();
 			this.LoadAppData();
+
+			this.frmMainWindow_Resize(this, new EventArgs());
 		}
 
 
@@ -102,9 +104,13 @@ namespace spintires_mudrunner_profile_manager
 			}
 		}
 
-		private void ResetAppData()
+		private void LoadAppData()
 		{
+			int previouslySelectedProfileIndex = this.SelectedProfileIndex;
+
+			// Reset the controls and their data
 			this.lvMods.ItemChecked -= lvMods_ItemChecked; // Manually assign this event handler after we've populated the item list to prevent it triggering unnecessarily.
+			this.lvMods.ItemCheck -= lvMods_ItemCheck;
 			this.lvProfiles.SelectedIndexChanged -= lvProfiles_SelectedIndexChanged;
 
 			this.activeProfileIndex = -1;
@@ -113,12 +119,6 @@ namespace spintires_mudrunner_profile_manager
 			this.lvMods.Items.Clear();
 			this.profiles = null;
 			this.mods = null;
-
-		}
-
-		private void LoadAppData()
-		{
-			this.ResetAppData();
 
 			// load the mod list
 			var profilePath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, this.appSettings.ProfilesSubfolderName);
@@ -142,8 +142,6 @@ namespace spintires_mudrunner_profile_manager
 
 			}
 
-			this.frmMainWindow_Resize(this, new EventArgs());
-
 			string activeProfileGuid = this.ReadCurrentProfileGuid();
 			this.activeProfileIndex = this.profiles.FindIndex(a => a.Guid == activeProfileGuid);
 			if (this.activeProfileIndex >= 0)
@@ -165,7 +163,14 @@ namespace spintires_mudrunner_profile_manager
 				this.lvProfiles.Items[this.lvProfiles.Items.Count - 1].Selected = true;
 			}
 
+			// Restore the previous selection
+			if (previouslySelectedProfileIndex > -1 && previouslySelectedProfileIndex < this.lvProfiles.Items.Count)
+			{
+				this.lvProfiles.Items[previouslySelectedProfileIndex].Focused = true;
+				this.lvProfiles.Items[previouslySelectedProfileIndex].Selected = true;
+			}
 
+			this.lvMods.ItemCheck += lvMods_ItemCheck;
 			this.lvMods.ItemChecked += lvMods_ItemChecked; // Manually assign this event handler after we've populated the item list to prevent it triggering unnecessarily.
 			this.lvProfiles.SelectedIndexChanged += lvProfiles_SelectedIndexChanged;
 
@@ -174,11 +179,16 @@ namespace spintires_mudrunner_profile_manager
 
 		private void lvProfiles_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (this.lvProfiles.FocusedItem == null) return;	// Detects the "double fire" event where the deselecting items fire an Index Changed event
+			if (this.lvProfiles.FocusedItem == null) return;    // Detects the "double fire" event where the deselecting items fire an Index Changed event
+
+			this.lvMods.ItemChecked -= lvMods_ItemChecked;
+			this.lvMods.ItemCheck -= lvMods_ItemCheck;
+
 			if (this.SelectedProfile != null)
 			{
+				this.EnableProfileRelatedControls(true);
+
 				this.txtProfileName.Text = this.SelectedProfile.Name;
-				this.lvMods.ItemChecked -= lvMods_ItemChecked;
 
 				foreach (ListViewItem listItem in this.lvMods.Items)
 				{
@@ -188,10 +198,6 @@ namespace spintires_mudrunner_profile_manager
 						listItem.Checked = true;
 					}
 				}
-
-				this.lvMods.ItemChecked += lvMods_ItemChecked;
-
-				this.EnableProfileRelatedControls(true);
 			}
 			else
 			{
@@ -204,6 +210,9 @@ namespace spintires_mudrunner_profile_manager
 				this.EnableProfileRelatedControls(false);
 
 			}
+
+			this.lvMods.ItemCheck += lvMods_ItemCheck;
+			this.lvMods.ItemChecked += lvMods_ItemChecked;
 		}
 
 		private void EnableProfileRelatedControls(bool enable)
@@ -428,8 +437,6 @@ namespace spintires_mudrunner_profile_manager
 				this.lvProfiles.Items.Add("").SubItems.Add(workerData.NewDefaultProfile.DisplayName);
 			}
 
-			this.lvProfiles.Invalidate();
-
 			if (workerData.LaunchGame)
 			{
 				AppLogic.LaunchGame(AppLogic.PathCombine(appSettings.SteamFolder, appSettings.SteamExecutable), this.appSettings.GameAppID);
@@ -540,33 +547,7 @@ namespace spintires_mudrunner_profile_manager
 			// Overwrite the config file
 			configXMLDocument.Save(configFilePath);
 		}
-
-		//private void lvProfiles_DrawItem(object sender, DrawListViewItemEventArgs e)
-		//{
-		//	Brush brush = null;
-
-		//	if (e.Item.Selected)
-		//	{
-		//		brush = new SolidBrush(SystemColors.Highlight);
-		//	}
-		//	else if (e.ItemIndex == this.activeProfileIndex)
-		//	{
-		//		brush = new SolidBrush(Color.FromArgb(0, 192, 0));
-		//	}
-		//	else if (e.ItemIndex == this.hoverItemIndex)    // Hover
-		//	{
-		//		brush = new SolidBrush(SystemColors.HotTrack);
-		//	}
-		//	else
-		//	{
-		//		brush = new SolidBrush(e.Item.BackColor);
-		//	}
-
-		//	e.Graphics.FillRectangle(brush, e.Bounds);
-
-		//	e.DrawText();
-		//}
-
+		
 		private void frmMainWindow_Resize(object sender, EventArgs e)
 		{
 			var nameWidth = this.lvMods.Columns[0].Width;
@@ -650,6 +631,7 @@ namespace spintires_mudrunner_profile_manager
 
 				this.WriteMods(this.mods);
 
+				//this.inhibitModAutoCheck = false;	// The double click check prevention also prevents us setting the check state programmatically, so clear the inhibit flag
 				this.LoadAppData();
 			}
 		}

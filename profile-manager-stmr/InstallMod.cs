@@ -20,10 +20,12 @@ namespace net.glympz.ProfileManagerSTMR
 		private OpenFileDialog modFilePicker;
 		private string modFolderPath;
 		private frmWorkingDialog workingDialog;
+		private string filePickerLastUsedPath;
 		public frmInstallMod()
 		{
 			InitializeComponent();
 			this.Icon = Resources.ProfileManagerIcon;
+			this.workingDialog = new frmWorkingDialog();
 		}
 
 		public DialogResult ShowForm(IWin32Window owner, string modFolderPath)
@@ -35,7 +37,6 @@ namespace net.glympz.ProfileManagerSTMR
 
 		private void frmInstallMod_Load(object sender, EventArgs e)
 		{
-			this.workingDialog = new frmWorkingDialog();
 			this.txtModFilePath.ReadOnly = true;
 			this.txtModFilePath.Text = "";
 			this.txtModName.Text = "";
@@ -52,7 +53,6 @@ namespace net.glympz.ProfileManagerSTMR
 				string initDir = KnownFolders.Downloads.ExpandedPath;
 				if (!Directory.Exists(initDir)) initDir = KnownFolders.Profile.ExpandedPath;
 				this.modFilePicker.InitialDirectory = initDir;
-
 				this.modFilePicker.RestoreDirectory = false;
 				this.modFilePicker.Title = "Install a Spintires: MudRunner Mod";
 				this.modFilePicker.Multiselect = false;
@@ -67,13 +67,22 @@ namespace net.glympz.ProfileManagerSTMR
 
 		private void btnSteamFolderPicker_Click(object sender, EventArgs e)
 		{
+			string previousModFileName = Path.GetFileNameWithoutExtension(this.txtModFilePath.Text);
+
+			if (!string.IsNullOrEmpty(this.filePickerLastUsedPath))
+			{
+				this.modFilePicker.InitialDirectory = this.filePickerLastUsedPath;
+			}
 
 			if (this.modFilePicker.ShowDialog() == DialogResult.OK)
 			{
 				this.txtModFilePath.Text = this.modFilePicker.FileName;
+
+				this.filePickerLastUsedPath = Path.GetDirectoryName(this.modFilePicker.FileName);
 			}
 
-			if (string.IsNullOrWhiteSpace(this.txtModName.Text))
+
+			if (string.IsNullOrWhiteSpace(this.txtModName.Text) || this.txtModName.Text == previousModFileName)
 			{
 				this.txtModName.Text = Path.GetFileNameWithoutExtension(this.txtModFilePath.Text);
 			}

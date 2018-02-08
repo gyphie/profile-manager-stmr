@@ -23,7 +23,6 @@ namespace net.glympz.ProfileManagerSTMR
 		public void ShowWorking(string message = "Working...")
 		{
 			this.lblWorkingMessage.Text = message;
-			this.TopMost = true;
 			this.StartPosition = FormStartPosition.CenterParent;
 			this.startTime = DateTime.Now;
 			this.ShowDialog();

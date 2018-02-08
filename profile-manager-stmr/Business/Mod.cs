@@ -115,6 +115,8 @@ namespace net.glympz.ProfileManagerSTMR.Business
 				Mod.WriteMods(profileMangerPath, foundMods);
 			}
 
+			foundMods.Sort((a,b) => a.Name.CompareTo(b.Name));
+
 			return foundMods;
 		}
 

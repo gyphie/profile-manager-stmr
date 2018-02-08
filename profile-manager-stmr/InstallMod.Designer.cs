@@ -113,12 +113,14 @@ namespace net.glympz.ProfileManagerSTMR
 			this.txtModFilePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtModFilePath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.txtModFilePath.Cursor = System.Windows.Forms.Cursors.Default;
 			this.txtModFilePath.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.txtModFilePath.Location = new System.Drawing.Point(17, 36);
 			this.txtModFilePath.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.txtModFilePath.Name = "txtModFilePath";
 			this.txtModFilePath.Size = new System.Drawing.Size(519, 29);
 			this.txtModFilePath.TabIndex = 15;
+			this.txtModFilePath.Click += new System.EventHandler(this.btnSteamFolderPicker_Click);
 			// 
 			// label2
 			// 

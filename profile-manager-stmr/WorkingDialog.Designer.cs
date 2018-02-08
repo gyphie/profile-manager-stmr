@@ -40,29 +40,31 @@ namespace net.glympz.ProfileManagerSTMR
 			this.lblWorkingMessage.Font = new System.Drawing.Font("Segoe UI", 18F);
 			this.lblWorkingMessage.Location = new System.Drawing.Point(12, 9);
 			this.lblWorkingMessage.Name = "lblWorkingMessage";
-			this.lblWorkingMessage.Size = new System.Drawing.Size(317, 107);
+			this.lblWorkingMessage.Size = new System.Drawing.Size(305, 107);
 			this.lblWorkingMessage.TabIndex = 0;
-			this.lblWorkingMessage.Text = "Switching Profiles...";
+			this.lblWorkingMessage.Text = "Working...";
 			this.lblWorkingMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.lblWorkingMessage.UseMnemonic = false;
 			this.lblWorkingMessage.UseWaitCursor = true;
 			// 
 			// progressBar
 			// 
+			this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.progressBar.Location = new System.Drawing.Point(12, 119);
 			this.progressBar.Name = "progressBar";
-			this.progressBar.Size = new System.Drawing.Size(317, 23);
+			this.progressBar.Size = new System.Drawing.Size(305, 23);
 			this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
 			this.progressBar.TabIndex = 1;
 			// 
 			// frmWorkingDialog
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(333, 153);
+			this.ClientSize = new System.Drawing.Size(329, 149);
 			this.ControlBox = false;
 			this.Controls.Add(this.progressBar);
 			this.Controls.Add(this.lblWorkingMessage);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "frmWorkingDialog";
