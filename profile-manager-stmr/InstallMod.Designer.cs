@@ -28,6 +28,7 @@ namespace net.glympz.ProfileManagerSTMR
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.bgwInstaller = new System.ComponentModel.BackgroundWorker();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnInstall = new System.Windows.Forms.Button();
@@ -40,6 +41,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.label1 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.cmboRating = new System.Windows.Forms.ComboBox();
+			this.timEnableForm = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			// 
 			// bgwInstaller
@@ -193,6 +195,10 @@ namespace net.glympz.ProfileManagerSTMR
 			this.cmboRating.Size = new System.Drawing.Size(180, 29);
 			this.cmboRating.TabIndex = 21;
 			// 
+			// timEnableForm
+			// 
+			this.timEnableForm.Tick += new System.EventHandler(this.timEnableForm_Tick);
+			// 
 			// frmInstallMod
 			// 
 			this.AcceptButton = this.btnInstall;
@@ -239,5 +245,6 @@ namespace net.glympz.ProfileManagerSTMR
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.ComboBox cmboRating;
+		private System.Windows.Forms.Timer timEnableForm;
 	}
 }

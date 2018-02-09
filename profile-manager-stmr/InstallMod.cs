@@ -18,6 +18,7 @@ namespace net.glympz.ProfileManagerSTMR
 		private string modFolderPath;
 		private frmWorkingDialog workingDialog;
 		private string filePickerLastUsedPath;
+		private bool isFirstTimePicker = true;
 		public frmInstallMod()
 		{
 			InitializeComponent();
@@ -29,6 +30,7 @@ namespace net.glympz.ProfileManagerSTMR
 		{
 			this.Tag = null;
 			this.modFolderPath = modFolderPath;
+			this.Enabled = true;
 			return this.ShowDialog(owner);
 		}
 
@@ -39,7 +41,9 @@ namespace net.glympz.ProfileManagerSTMR
 			this.txtModName.Text = "";
 			this.cmboModType.SelectedIndex = 0;
 			this.cmboRating.SelectedIndex = 1;
+			this.isFirstTimePicker = true;
 			this.SetupFilePicker();
+
 			this.btnModArchivePicker_Click(this.btnModArchivePicker, new EventArgs());
 		}
 
@@ -72,13 +76,25 @@ namespace net.glympz.ProfileManagerSTMR
 				this.modFilePicker.InitialDirectory = this.filePickerLastUsedPath;
 			}
 
+			this.Enabled = false;
 			if (this.modFilePicker.ShowDialog() == DialogResult.OK)
 			{
 				this.txtModFilePath.Text = this.modFilePicker.FileName;
 
 				this.filePickerLastUsedPath = Path.GetDirectoryName(this.modFilePicker.FileName);
 			}
+			else
+			{
+				if (this.isFirstTimePicker)
+				{
+					this.DialogResult = DialogResult.Cancel;
+					return;
+				}
+			}
 
+			this.timEnableForm.Start();
+
+			this.isFirstTimePicker = false;
 
 			if (string.IsNullOrWhiteSpace(this.txtModName.Text) || this.txtModName.Text == previousModFileName)
 			{
@@ -119,8 +135,6 @@ namespace net.glympz.ProfileManagerSTMR
 
 		private void bgwInstaller_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			this.Enabled = true;
-
 			if (e.Error != null)
 			{
 				this.workingDialog.HideWorking(minMillisecondsDisplayed: 0);
@@ -241,6 +255,15 @@ namespace net.glympz.ProfileManagerSTMR
 		private void bgwInstaller_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
 			this.workingDialog.SetProgress(e.ProgressPercentage);
+		}
+
+		private void timEnableForm_Tick(object sender, EventArgs e)
+		{
+			this.Enabled = true;
+			this.timEnableForm.Stop();
+			this.txtModFilePath.Select(0,0);
+			this.txtModName.Select(0, 0);
+			this.btnModArchivePicker.Focus();
 		}
 	}
 }
