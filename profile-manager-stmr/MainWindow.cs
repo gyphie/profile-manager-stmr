@@ -495,37 +495,37 @@ namespace spintires_mudrunner_profile_manager
 
 		private void CreateXML(Profile profile)
 		{
-			string configFilePath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, "config.xml");
+			string configFilePath = AppLogic.PathCombine(this.appSettings.GameAppDataFolder, "Config.xml");
 			var configXMLDocument = new XmlDocument();
 			configXMLDocument.Load(configFilePath);
 
 			var root = configXMLDocument.DocumentElement;
 
-			XmlNode mediaZipNode = null;
+			XmlNode lastMediaPathNode = null;
 
-			// Remove any MediaPath entries (except the defaults)
+			// Remove any MediaPath entries that contain the MOD path. Leave all others.
 			var mediaPathNodes = new List<XmlNode>();
 			foreach (XmlNode node in root.GetElementsByTagName("MediaPath"))	// Clone the list so the removeChild foreach loop doesn't have issues with modifying the underlying collection
 			{
 				mediaPathNodes.Add(node);
 			}
 
+
+			string modPathPrefix = (this.appSettings.ModSubfolderName.Trim(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar).ToLower();
 			foreach (XmlNode mediaPath in mediaPathNodes)
 			{
 				try
 				{
 					var path = mediaPath.Attributes["Path"].Value.ToLower();
 
-					if (path == "media.zip")
-					{
-						mediaZipNode = mediaPath;
-					}
-
-					if (path != "media.zip" &&
-						path != "texturecache.zip" &&
-						path != "meshcache.zip")
+					// Check for and remove managed mod nodes
+					if (path.StartsWith(modPathPrefix))
 					{
 						root.RemoveChild(mediaPath);
+					}
+					else
+					{
+						lastMediaPathNode = mediaPath;
 					}
 				}
 				catch { }
@@ -538,9 +538,9 @@ namespace spintires_mudrunner_profile_manager
 				var pathAttribute = configXMLDocument.CreateAttribute("Path", null);
 				pathAttribute.Value = AppLogic.PathCombine(this.appSettings.ModSubfolderName, activatedMod.Path);
 				modNode.Attributes.Append(pathAttribute);
-				if (mediaZipNode != null)
+				if (lastMediaPathNode != null)
 				{
-					root.InsertBefore(modNode, mediaZipNode);
+					root.InsertAfter(modNode, lastMediaPathNode);
 				}
 				else
 				{

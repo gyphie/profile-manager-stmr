@@ -47,6 +47,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnOpenFolderGame = new System.Windows.Forms.Button();
 			this.btnOpenFolderAppData = new System.Windows.Forms.Button();
 			this.btnOpenFolderMods = new System.Windows.Forms.Button();
+			this.btnResetConfig = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnCancel
@@ -287,6 +288,22 @@ namespace net.glympz.ProfileManagerSTMR
 			this.btnOpenFolderMods.UseVisualStyleBackColor = true;
 			this.btnOpenFolderMods.Click += new System.EventHandler(this.btnOpenFolderX_Click);
 			// 
+			// btnResetConfig
+			// 
+			this.btnResetConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.btnResetConfig.BackColor = System.Drawing.SystemColors.ControlLight;
+			this.btnResetConfig.FlatAppearance.BorderSize = 0;
+			this.btnResetConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.btnResetConfig.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnResetConfig.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.btnResetConfig.Location = new System.Drawing.Point(12, 209);
+			this.btnResetConfig.Name = "btnResetConfig";
+			this.btnResetConfig.Size = new System.Drawing.Size(140, 40);
+			this.btnResetConfig.TabIndex = 10;
+			this.btnResetConfig.Text = "&Reset Config.xml";
+			this.btnResetConfig.UseVisualStyleBackColor = false;
+			this.btnResetConfig.Click += new System.EventHandler(this.btnResetConfig_Click);
+			// 
 			// frmSettings
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -305,6 +322,7 @@ namespace net.glympz.ProfileManagerSTMR
 			this.Controls.Add(this.lblAppDataFolder);
 			this.Controls.Add(this.lblGameFolder);
 			this.Controls.Add(this.lblSteamFolder);
+			this.Controls.Add(this.btnResetConfig);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.btnSave);
 			this.Controls.Add(this.txtModsFolder);
@@ -344,5 +362,6 @@ namespace net.glympz.ProfileManagerSTMR
 		private System.Windows.Forms.Button btnOpenFolderGame;
 		private System.Windows.Forms.Button btnOpenFolderAppData;
 		private System.Windows.Forms.Button btnOpenFolderMods;
+		private System.Windows.Forms.Button btnResetConfig;
 	}
 }

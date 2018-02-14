@@ -131,5 +131,27 @@ namespace net.glympz.ProfileManagerSTMR
 				// open in explorer
 			}
 		}
+
+		private void btnResetConfig_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				File.Copy(
+					sourceFileName: AppLogic.PathCombine(this.appSettings.GameFolder, "Config.xml"),
+					destFileName: AppLogic.PathCombine(this.appSettings.GameAppDataFolder, "Config.xml"),
+					overwrite: true
+				);
+			}
+			catch
+			{
+				MessageBox.Show("Could not restore the config.xml file in the game's AppData folder. You can manually delete this file and run Spintires: MudRunner which will automatically re-create it.",
+					"Error resetting config file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+				return;
+			}
+
+			MessageBox.Show("The config file has been reset.", "Config file reset", MessageBoxButtons.OK);
+			this.DialogResult = DialogResult.Cancel;
+		}
 	}
 }
