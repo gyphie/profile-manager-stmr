@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using JR.Utils.GUI.Forms;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using net.glympz.ProfileManagerSTMR;
@@ -38,6 +39,16 @@ namespace spintires_mudrunner_profile_manager
 			this.lvMods.Columns[2].Width = 90;
 			this.lvMods.Columns[3].Width = 60;
 			this.lvMods.Columns[4].Width = 60;
+
+
+			try
+			{
+				this.Text = String.Format(this.Text, $"v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
+			}
+			catch
+			{
+				this.Text = this.Text.Replace(" {0}", "");
+			}
 		}
 
 		private const string ACTIVE_PROFILE_INDICATOR = "•";
@@ -95,7 +106,7 @@ namespace spintires_mudrunner_profile_manager
 			{
 				if (!string.IsNullOrEmpty(messages))
 				{
-					MessageBox.Show(messages);
+					FlexibleMessageBox.Show(messages);
 				}
 
 				this.settingsDialog.ShowFormDialog(this, this.appSettings);
@@ -261,7 +272,7 @@ namespace spintires_mudrunner_profile_manager
 				return;
 			}
 
-			if (MessageBox.Show($"Delete \"{this.SelectedProfile.DisplayName}\"?\n\nThis will also delete any saved games in this profile.", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No)
+			if (FlexibleMessageBox.Show($"Delete \"{this.SelectedProfile.DisplayName}\"?\n\nThis will also delete any saved games in this profile.", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No)
 			{
 				return;
 			}
@@ -272,9 +283,9 @@ namespace spintires_mudrunner_profile_manager
 				FileSystem.DeleteDirectory(profilePath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
 
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show("The profile files could not be deleted.");
+				FlexibleMessageBox.Show(ex.FormatForMessageBox("The profile files could not be deleted."));
 				return;
 			}
 
@@ -423,7 +434,7 @@ namespace spintires_mudrunner_profile_manager
 
 			if (e.Error != null)
 			{
-				MessageBox.Show("There was an error while switching profiles.", "Error switching profiles");
+				FlexibleMessageBox.Show(e.Error.FormatForMessageBox("There was an error while switching profiles."), "Error switching profiles");
 				return;
 			}
 
@@ -640,7 +651,7 @@ namespace spintires_mudrunner_profile_manager
 			}
 			else
 			{
-				MessageBox.Show("The mod could not be deleted.");
+				FlexibleMessageBox.Show("The mod could not be deleted.");
 			}
 
 		}
@@ -734,7 +745,7 @@ namespace spintires_mudrunner_profile_manager
 			if (this.lvMods.SelectedItems.Count > 0)
 			{
 				var mod = this.mods[this.lvMods.SelectedIndices[0]];
-				if (DialogResult.OK == MessageBox.Show("Uninstalling this mod will delete this mod folder from disk.", $"Uninstall {mod.Name}", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
+				if (DialogResult.OK == FlexibleMessageBox.Show("Uninstalling this mod will delete this mod folder from disk.", $"Uninstall {mod.Name}", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
 				{
 					this.DeleteMod(mod);
 					this.WriteMods(this.mods);

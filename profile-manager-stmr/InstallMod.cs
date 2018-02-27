@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using JR.Utils.GUI.Forms;
 using net.glympz.ProfileManagerSTMR.Business;
 using net.glympz.ProfileManagerSTMR.Properties;
 using SevenZipExtractor;
@@ -125,6 +126,7 @@ namespace net.glympz.ProfileManagerSTMR
 			try
 			{
 				e.Result = workerData;
+
 				this.DecompressArchive(workerData.ArchivePath, AppLogic.PathCombine(workerData.GameModPath, workerData.Mod.RootPath));
 			}
 			catch (Exception ex)
@@ -140,7 +142,7 @@ namespace net.glympz.ProfileManagerSTMR
 				this.workingDialog.HideWorking(minMillisecondsDisplayed: 0);
 
 				var bgwException = e.Error as BackgroundWorkerRunException;
-				var innerException = bgwException.InnerException;
+				var innerException = bgwException.InnerException ?? bgwException;
 
 				string installationPath = AppLogic.PathCombine(bgwException.WorkerData.GameModPath, bgwException.WorkerData.Mod.RootPath);
 
@@ -155,15 +157,15 @@ namespace net.glympz.ProfileManagerSTMR
 
 				if (innerException is UnauthorizedAccessException)
 				{
-					MessageBox.Show("The mod could not be installed. You may need to run as administrator.", "Access denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					FlexibleMessageBox.Show(innerException.FormatForMessageBox("The mod could not be installed. You may need to run as administrator."), "Access denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				}
 				else if (innerException is InvalidOperationException && innerException.Message.StartsWith("Cannot determine compressed stream type."))
 				{
-					MessageBox.Show("The mod could not be installed because files compression type is not supported. You should try using 7zip or WinRar may be required.", "Unsupported file type", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					FlexibleMessageBox.Show(innerException.FormatForMessageBox("The mod could not be installed because files compression type is not supported. You should try using 7zip or WinRar may be required."), "Unsupported file type", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				}
 				else
 				{
-					MessageBox.Show("There was an unexpected error and the mod could not be installed.", "Mod installation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					FlexibleMessageBox.Show(innerException.FormatForMessageBox("There was an unexpected error and the mod could not be installed."), "Mod installation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 
 				return;
@@ -199,7 +201,7 @@ namespace net.glympz.ProfileManagerSTMR
 
 			if (Directory.Exists(modPath))
 			{
-				MessageBox.Show("A mod from this archive already exists. This mod cannot be installed.", "Mod already exists", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				FlexibleMessageBox.Show("A mod from this archive already exists. This mod cannot be installed.", "Mod already exists", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				return;
 			}
 
@@ -209,17 +211,17 @@ namespace net.glympz.ProfileManagerSTMR
 			}
 			catch (UnauthorizedAccessException)
 			{
-				MessageBox.Show("The mod folder could not be created. You may need to run as administrator.", "Access denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				FlexibleMessageBox.Show("The mod folder could not be created. You may need to run as administrator.", "Access denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 				return;
 			}
 			catch (Exception ex) when (ex is IOException || ex is ArgumentException || ex is ArgumentNullException || ex is PathTooLongException)
 			{
-				MessageBox.Show("The mod folder could not created. Make sure the mod name does not contain invalid characters.", "Folder creation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				FlexibleMessageBox.Show(ex.FormatForMessageBox("The mod folder could not created. Make sure the mod name does not contain invalid characters."), "Folder creation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-			catch
+			catch (Exception ex)
 			{
-				MessageBox.Show("The mod folder could not created.", "Folder creation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(ex.FormatForMessageBox("The mod folder could not created."), "Folder creation error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 

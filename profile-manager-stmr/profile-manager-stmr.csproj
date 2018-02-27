@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="Business\AppLogic.cs" />
     <Compile Include="Business\Enums.cs" />
+    <Compile Include="Business\FlexibleMessageBox.cs" />
     <Compile Include="Business\Mod.cs" />
     <Compile Include="Business\Profile.cs" />
     <Compile Include="Business\SpinTiresConfig.cs" />

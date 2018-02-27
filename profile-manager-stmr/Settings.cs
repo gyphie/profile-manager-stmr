@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using JR.Utils.GUI.Forms;
 using net.glympz.ProfileManagerSTMR.Business;
 using net.glympz.ProfileManagerSTMR.Properties;
 
@@ -45,23 +46,23 @@ namespace net.glympz.ProfileManagerSTMR
 
 			if (!Directory.Exists(steamFolder) || !File.Exists(AppLogic.PathCombine(steamFolder, appSettings.SteamExecutable)))
 			{
-				MessageBox.Show($"{appSettings.SteamExecutable} was not found in the Steam Folder.");
+				FlexibleMessageBox.Show($"{appSettings.SteamExecutable} was not found in the Steam Folder.");
 				return;
 			}
 			if (!Directory.Exists(gameFolder) || !File.Exists(AppLogic.PathCombine(gameFolder, this.appSettings.GameExecutable)))
 			{
-				MessageBox.Show("The Spintires: MudRunner folder was not found.");
+				FlexibleMessageBox.Show("The Spintires: MudRunner folder was not found.");
 				return;
 			}
 			if (!Directory.Exists(gameAppDataFolder))
 			{
-				MessageBox.Show("The Spintires: MudRunner AppData folder was not found.");
+				FlexibleMessageBox.Show("The Spintires: MudRunner AppData folder was not found.");
 				return;
 			}
 
 			if (!AppLogic.IsSubdirectory(gameFolder, modFolder))
 			{
-				MessageBox.Show("The Mod Folder must be a sub-folder of the Game Folder.");
+				FlexibleMessageBox.Show("The Mod Folder must be a sub-folder of the Game Folder.");
 				return;
 			}
 

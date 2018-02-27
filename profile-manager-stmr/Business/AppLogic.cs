@@ -200,4 +200,41 @@ namespace net.glympz.ProfileManagerSTMR.Business
 			}
 		}
 	}
+
+	public static class Extensions
+	{
+		public static string FormatForMessageBox(this Exception exception, string message)
+		{
+			if (exception == null) return message ?? "";
+
+			var sbException = new StringBuilder(message);
+			sbException.Append("\n\n");
+			sbException.AppendLine("------------ Main Exception ------------");
+			sbException.AppendLine("Message: ");
+			sbException.Append(exception.Message);
+			sbException.Append("\n\n");
+			sbException.AppendLine("Source:");
+			sbException.Append(exception.Source);
+			sbException.Append("\n\n");
+			sbException.AppendLine("Stack Trace:");
+			sbException.Append(exception.StackTrace);
+			sbException.Append("\n\n");
+
+			if (exception.InnerException != null)
+			{
+				sbException.AppendLine("------------ Inner Exception ------------");
+				sbException.AppendLine("Message: ");
+				sbException.Append(exception.Message);
+				sbException.Append("\n\n");
+				sbException.AppendLine("Source:");
+				sbException.Append(exception.Source);
+				sbException.Append("\n\n");
+				sbException.AppendLine("Stack Trace:");
+				sbException.Append(exception.StackTrace);
+				sbException.Append("\n\n");
+			}
+
+			return sbException.ToString();
+		}
+	}
 }

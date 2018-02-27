@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using JR.Utils.GUI.Forms;
 using net.glympz.ProfileManagerSTMR.Business;
 using net.glympz.ProfileManagerSTMR.Properties;
 
@@ -70,7 +71,7 @@ namespace net.glympz.ProfileManagerSTMR
 
 		private void btnDelete_Click(object sender, EventArgs e)
 		{
-			if (DialogResult.OK != MessageBox.Show("Uninstalling this mod will delete this mod folder from disk.", "Uninstall mod", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
+			if (DialogResult.OK != FlexibleMessageBox.Show("Uninstalling this mod will delete this mod folder from disk.", "Uninstall mod", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
 			{
 				return;
 			}

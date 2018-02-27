@@ -106,27 +106,27 @@ namespace spintires_mudrunner_profile_manager
 			this.cmsProfile.Name = "cmsProfile";
 			this.cmsProfile.ShowCheckMargin = true;
 			this.cmsProfile.ShowImageMargin = false;
-			this.cmsProfile.Size = new System.Drawing.Size(210, 92);
+			this.cmsProfile.Size = new System.Drawing.Size(210, 70);
 			this.cmsProfile.Opening += new System.ComponentModel.CancelEventHandler(this.cmsProfile_Opening);
 			// 
 			// miProfileSwitchAndLaunch
 			// 
 			this.miProfileSwitchAndLaunch.Name = "miProfileSwitchAndLaunch";
-			this.miProfileSwitchAndLaunch.Size = new System.Drawing.Size(184, 22);
+			this.miProfileSwitchAndLaunch.Size = new System.Drawing.Size(209, 22);
 			this.miProfileSwitchAndLaunch.Text = "Switch to $$$  and launch";
 			this.miProfileSwitchAndLaunch.Click += new System.EventHandler(this.miProfileSwitchAndLaunch_Click);
 			// 
 			// miProfileSwitch
 			// 
 			this.miProfileSwitch.Name = "miProfileSwitch";
-			this.miProfileSwitch.Size = new System.Drawing.Size(184, 22);
+			this.miProfileSwitch.Size = new System.Drawing.Size(209, 22);
 			this.miProfileSwitch.Text = "Switch to $$$";
 			this.miProfileSwitch.Click += new System.EventHandler(this.miProfileSwitch_Click);
 			// 
 			// miProfileDelete
 			// 
 			this.miProfileDelete.Name = "miProfileDelete";
-			this.miProfileDelete.Size = new System.Drawing.Size(184, 22);
+			this.miProfileDelete.Size = new System.Drawing.Size(209, 22);
 			this.miProfileDelete.Text = "Delete $$$";
 			this.miProfileDelete.Click += new System.EventHandler(this.miProfileDelete_Click);
 			// 
@@ -366,7 +366,7 @@ namespace spintires_mudrunner_profile_manager
 			this.MinimumSize = new System.Drawing.Size(800, 400);
 			this.Name = "frmMainWindow";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-			this.Text = "Profile Manager for Spintires: MudRunner";
+			this.Text = "Profile Manager for Spintires: MudRunner {0}";
 			this.Load += new System.EventHandler(this.frmMainWindow_Load);
 			this.Shown += new System.EventHandler(this.frmMainWindow_Shown);
 			this.Resize += new System.EventHandler(this.frmMainWindow_Resize);
